@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.ArrayList;
 
 public class Room{
 
@@ -9,7 +10,8 @@ public class Room{
    * roomDifficulty is an integer from 1-3 that can be used as a multiplier within methods to make rooms more complex 
    */
 	private int roomSize, numberOfDoors, roomDifficulty;
-	private Location roomLocation = new Location(); 
+	private Location roomLocation = new Location();
+	private ArrayList<Location> doorLocations = new ArrayList<Location>(); 
 
 	// =========================
   // Constructors
@@ -20,7 +22,7 @@ public class Room{
    */
 	public Room(){
 		Location defaultLocation = new Location(0, 0 ,1);
-		setRoom(11, defaultLocation, 2, 1);
+		setRoom(10, defaultLocation, 2, 1);
 	}
 
 	/**
@@ -53,6 +55,16 @@ public class Room{
   	this.roomLocation = roomLocation;
 		this.numberOfDoors = numberOfDoors;
 		this.roomDifficulty = roomDifficulty;
+		//Door locations are randomly chosen out of center coordinates of walls.
+		Location[] posDoorLocations = new Location[4]; //All four possible door locations.
+		posDoorLocations[0] = new Location(roomLocation.getX()+(roomSize/2), roomLocation.getY(), roomLocation.getRoomNumber());
+		posDoorLocations[1] = new Location(roomLocation.getX()+roomSize, roomLocation.getY()+(roomSize/2), roomLocation.getRoomNumber()); 
+		posDoorLocations[2] = new Location(roomLocation.getX()+(roomSize/2), roomLocation.getY()+roomSize, roomLocation.getRoomNumber());
+		posDoorLocations[3] = new Location(roomLocation.getX(), roomLocation.getY()+(roomSize/2), roomLocation.getRoomNumber());  
+		final int[] randIndex = new Random().ints(0, 4).distinct().limit(4).toArray();
+		for(int i=0; i<numberOfDoors; i++){
+			doorLocations.add(posDoorLocations[randIndex[i]]);
+		}
   }
 
   /**
@@ -93,6 +105,16 @@ public class Room{
    */   
 	public int getRoomDifficulty(){
 		return roomDifficulty;
+	}
+
+	/**
+   * Accessor for doorLocations. 
+   *
+   * @param  none.
+   * @return The locations of the doors in the room.
+   */   
+	public ArrayList<Location> getDoorLocations(){
+		return doorLocations;
 	}
 
 	/**
