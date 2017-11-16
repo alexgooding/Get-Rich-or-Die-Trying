@@ -47,6 +47,31 @@ public class Location{
 		this.roomNumber = roomNumber;
   }
 
+	  /**
+   * Mutator for x.
+   *
+   * @param x - new x-coordinate for this location.
+   */
+  public void setX(int x){
+    this.x = x;
+  }
+
+  /**
+   * Mutator for y.
+   * @param y - new y-coordinate for this location.
+   */
+  public void setY(int y){
+    this.y = y;
+  }
+
+  /**
+   * Mutator for roomNumber.
+   * @param roomNumber - new room number for this location.
+   */
+  public void setRoomNumber(int roomNumber){
+    this.roomNumber = roomNumber;
+  }
+
   /**
    * Accessor for x co-ordinate. 
    *
