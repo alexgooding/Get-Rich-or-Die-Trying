@@ -6,7 +6,7 @@ public class RoomTest{
 
 		//Generate a new location and a new room.
 		Location testLocation = new Location();
-		Room testRoom = new Room(5, testLocation, 4, 1);
+		Room testRoom = new Room(4, testLocation, 2, 1);
 		//Update testLocation to a random location within testRoom
 		testLocation = testRoom.randomRoomLocation();
 		System.out.print("The coordinates of the test location within testRoom are ");
@@ -20,6 +20,11 @@ public class RoomTest{
 		Location[] boundaries = testRoom.getRoomBoundaries();
 		System.out.println("The boundaries of testRoom are:");
 		testLocation.printLocationArray(boundaries);
+		//Print door locations.
+		System.out.println("The door locations of testRoom are:");
+		for(int i=0; i<testRoom.getNumberOfDoors(); i++){
+			testRoom.getDoorLocations().get(i).printLocation();
+		}
 	}
 
 }
