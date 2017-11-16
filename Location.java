@@ -103,5 +103,10 @@ public class Location{
       System.out.printf("(%d, %d, %d)\n", locationArray[i].getX(), locationArray[i].getY(), locationArray[i].getRoomNumber());
     }
   }
+	
+  public double distanceFrom(Location a){
+    double distance = Math.sqrt((Math.pow(x-a.getX(),2))*Math.pow(y-a.getY(),2));
+    return distance; 
+  }
 
 }
