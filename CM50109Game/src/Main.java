@@ -11,6 +11,10 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+/*version:
+v0.1: Set up windows with a dungeon quad
+v0.2: Draw a quad(player), quad can move with button up,down,right,left
+*/
 public class Main {
 
 	// The window handle
@@ -97,32 +101,71 @@ public class Main {
 	    GL11.glLoadIdentity();
 	    GL11.glOrtho(0, 800, 0, 600, 1, -1);
 	    GL11.glMatrixMode(GL11.GL_MODELVIEW);
-
+	    
+	    float x=0;	//v0.2	Coordinate x_offset
+	    float y=0;	//v0.2	Coordinate y_offset
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
 		while ( !glfwWindowShouldClose(window) ) {
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 			
 			// Set the clear color
 		    GL11.glColor3f(0.4f,0.4f,0.4f);
 			
 			// draw quad
 	        GL11.glBegin(GL11.GL_QUADS);
-	            GL11.glVertex2f(0,0); // top left
+	        GL11.glVertex2f(0,0); // top left
 	        GL11.glVertex2f(800,0); // top right
 	        GL11.glVertex2f(800,600); // bottom right
 	        GL11.glVertex2f(0,600); // bottom left
 	        GL11.glEnd();
-			glfwSwapBuffers(window); // swap the color buffers
+	    	//glfwSwapBuffers(window); // swap the color buffers
 			
+			//v0.2	Implementation of key input
+			if(glfwGetKey(window, GLFW_KEY_UP) == GL_TRUE) {
+				System.out.println(y);
+				y += 1f;
+			}
+			if(glfwGetKey(window, GLFW_KEY_DOWN) == GL_TRUE) {
+				System.out.println(y);
+				y -= 1f;
+			}
+			if(glfwGetKey(window, GLFW_KEY_LEFT) == GL_TRUE) {
+				System.out.println(x);
+				x -= 1f;
+			}
+			if(glfwGetKey(window, GLFW_KEY_RIGHT) == GL_TRUE) {
+				System.out.println(x);
+				x += 1f;
+			}
 			// Poll for window events. The key callback above will only be
 			// invoked during this call.
 			glfwPollEvents();
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // clear the frame buffer
+			
+			//v0.2 draw a quad player -> movement according to the key input
+			// Set the clear color
+		    GL11.glColor3f(1f,1f,1f);
+			
+			// draw quad
+	        GL11.glBegin(GL11.GL_QUADS);
+	        GL11.glVertex2f(250+x,250+y); // top left
+	        GL11.glVertex2f(300+x,250+y); // top right
+	        GL11.glVertex2f(300+x,300+y); // bottom right
+	        GL11.glVertex2f(250+x,300+y); // bottom left
+	        GL11.glEnd();
+			glfwSwapBuffers(window); // swap the color buffers
+			/*
+			Player p = new Player(50,50);
+			p.drawPlayer();
+			glfwSwapBuffers(window); // swap the color buffers*/
 		}
+		
+		
 	}
 
 	public static void main(String[] args) {
 		new Main().run();
+		
 	}
 
 }

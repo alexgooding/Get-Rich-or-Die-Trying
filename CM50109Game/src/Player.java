@@ -53,17 +53,18 @@ public class Player {
     	}
     }
     
-    public void pickUpGold(Items gold) {
+   /*public void pickUpGold(Items gold) {
     	// Collision with the gold then auto pick up
     	if(Items.collide()) {
     		numOfGold++;
     	}
-    }
+    }*/
     
      
     public void playerMovement(){
     	
-        drawPlayer();       
+        drawPlayer();      
+        
        /* while(glfwGetKey().next()){
              
             if (Keyboard.getEventKeyState()){
