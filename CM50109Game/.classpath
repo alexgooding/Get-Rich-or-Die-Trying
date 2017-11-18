@@ -103,5 +103,7 @@
 	<classpathentry kind="lib" path="Lib/lwjgl-yoga.jar"/>
 	<classpathentry kind="lib" path="Lib/lwjgl.jar"/>
 	<classpathentry kind="lib" path="Lib/joml-1.9.6.jar"/>
+	<classpathentry kind="lib" path="H:/Software Engineering/grey/CM50109Game/Lib"/>
+	<classpathentry kind="lib" path="Lib"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
