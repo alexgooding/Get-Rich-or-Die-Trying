@@ -4,14 +4,15 @@ import java.util.ArrayList;
 public class Room{
 
 	/**
-   * roomSize is the N in the NxN dimensions of a square room.
+   * roomSize is the N in the NxN dimensions of a square room (NxN tiles).
    * roomLocation is the location of the bottom left corner of the room.
    * numberOfDoors is the amount of doors in the room, including the door entered through.
-   * roomDifficulty is an integer from 1-3 that can be used as a multiplier within methods to make rooms more complex 
+   * roomDifficulty is an integer from 1-3 that can be used as a multiplier within methods to make rooms more complex.
+   * doorLocations is a list of the door locations of the room. 
    */
 	private int roomSize, numberOfDoors, roomDifficulty;
 	private Location roomLocation = new Location();
-	private ArrayList<Location> doorLocations = new ArrayList<Location>(); 
+	private ArrayList<Door> doorLocations = new ArrayList<Door>(); 
 
 	// =========================
   // Constructors
@@ -21,8 +22,8 @@ public class Room{
    * Default constructor - this initialises x, y and roomNumber to the point (0, 0, 1).
    */
 	public Room(){
-		Location defaultLocation = new Location(0, 0 ,1);
-		setRoom(10, defaultLocation, 2, 1);
+		Location defaultLocation = new Location(50, 50 ,1);
+		setRoom(4, defaultLocation, 2, 1);
 	}
 
 	/**
@@ -45,7 +46,7 @@ public class Room{
   /**
    * Mutator for instance variables - sets the room parameters.
    *
-   * @param roomSize       - new dimension N for this location.
+   * @param roomSize       - new dimension N for this location. Player can only move within dimensions N-2.
    * @param roomLocation   - new location of the room.
 	 * @param numberOfDoors  - new number of doors for this room.
 	 * @param roomDifficulty - new room difficulty for this room.
@@ -56,11 +57,15 @@ public class Room{
 		this.numberOfDoors = numberOfDoors;
 		this.roomDifficulty = roomDifficulty;
 		//Door locations are randomly chosen out of center coordinates of walls.
-		Location[] posDoorLocations = new Location[4]; //All four possible door locations.
-		posDoorLocations[0] = new Location(roomLocation.getX()+(roomSize/2), roomLocation.getY(), roomLocation.getRoomNumber());
-		posDoorLocations[1] = new Location(roomLocation.getX()+roomSize, roomLocation.getY()+(roomSize/2), roomLocation.getRoomNumber()); 
-		posDoorLocations[2] = new Location(roomLocation.getX()+(roomSize/2), roomLocation.getY()+roomSize, roomLocation.getRoomNumber());
-		posDoorLocations[3] = new Location(roomLocation.getX(), roomLocation.getY()+(roomSize/2), roomLocation.getRoomNumber());  
+		Door[] posDoorLocations = new Door[4]; //All four possible door locations.
+		//South
+		posDoorLocations[0] = new Door(new Location(roomLocation.getX()+(roomSize/2), roomLocation.getY(), roomLocation.getRoomNumber()), 's');
+		//East
+		posDoorLocations[1] = new Door(new Location(roomLocation.getX()+roomSize, roomLocation.getY()+(roomSize/2), roomLocation.getRoomNumber()), 'e');
+		//North 
+		posDoorLocations[2] = new Door(new Location(roomLocation.getX()+(roomSize/2), roomLocation.getY()+roomSize, roomLocation.getRoomNumber()), 'n');
+		//West
+		posDoorLocations[3] = new Door(new Location(roomLocation.getX(), roomLocation.getY()+(roomSize/2), roomLocation.getRoomNumber()), 'w');  
 		final int[] randIndex = new Random().ints(0, 4).distinct().limit(4).toArray();
 		for(int i=0; i<numberOfDoors; i++){
 			doorLocations.add(posDoorLocations[randIndex[i]]);
@@ -113,7 +118,7 @@ public class Room{
    * @param  none.
    * @return The locations of the doors in the room.
    */   
-	public ArrayList<Location> getDoorLocations(){
+	public ArrayList<Door> getDoorLocations(){
 		return doorLocations;
 	}
 
@@ -145,6 +150,10 @@ public class Room{
 		} 
 		return boundaries;
 	}
+
+	// =========================
+  // Additional Methods
+  // =========================
 
 	/**
  	 * Randomly generates a location within a certain room. 

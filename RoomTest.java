@@ -23,7 +23,10 @@ public class RoomTest{
 		//Print door locations.
 		System.out.println("The door locations of testRoom are:");
 		for(int i=0; i<testRoom.getNumberOfDoors(); i++){
-			testRoom.getDoorLocations().get(i).printLocation();
+			testRoom.getDoorLocations().get(i).getDoorLocation().printLocation();
+		}
+		for(int i=0; i<testRoom.getNumberOfDoors(); i++){
+			System.out.println("The door is at cardinal point:" + testRoom.getDoorLocations().get(i).getDirection());
 		}
 	}
 
