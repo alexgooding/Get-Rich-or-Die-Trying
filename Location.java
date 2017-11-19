@@ -129,9 +129,30 @@ public class Location{
     }
   }
 	
-  public double distanceFrom(Location a){
-    double distance = Math.sqrt((Math.pow(x-a.getX(),2))*Math.pow(y-a.getY(),2));
+  /**
+   * Returns the distance from a location to location a.
+   *
+   * @param  l - the location we want to calculate the distance from. 
+   * @return The distance from location l as a double.
+   */ 
+  public double distanceFrom(Location l){
+    double distance = Math.sqrt((Math.pow(x-l.getX(),2))*Math.pow(y-l.getY(),2));
     return distance; 
+  }
+
+  /**
+   * Returns whether a location is equal to location l.
+   *
+   * @param  l - the location we want to compare. 
+   * @return a boolean indicating whether the two locations are equal.
+   */ 
+  public boolean equals(Location l){
+    if(x==l.getX() && y==l.getY()){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 
 }
