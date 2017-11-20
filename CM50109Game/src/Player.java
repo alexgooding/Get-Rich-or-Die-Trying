@@ -61,34 +61,27 @@ public class Player {
     }*/
     
      
-    public void playerMovement(){
-    	
-        drawPlayer();      
-        
-       /* while(glfwGetKey().next()){
-             
-            if (Keyboard.getEventKeyState()){
-                if(Keyboard.isKeyDown(Keyboard.KEY_D)){                 
-                    x++;
-                     
-                 
-                 
-                }
-             
-         
-            }
-             
-        }      */
+    public void playerMovement(){	
+        drawPlayer();     
     }
      
     public static void drawPlayer(){
+    	
+    	glBegin(GL_QUADS);
+        glVertex2f(250+x,250+y); // top left
+        glVertex2f(300+x,250+y); // top right
+        glVertex2f(300+x,300+y); // bottom right
+        glVertex2f(250+x,300+y); // bottom left
+        glEnd();
          
+    	/*
         glBegin(GL_QUADS); //Begins drawing the quad
         glColor3f(0.5f,0.4f,0.3f); //Paints the quad
         glVertex2f(x, y);//Top left corner
         glVertex2f(x + 45,y);//Top right corner
         glVertex2f(x + 45, y+ 45);//Bottom right corner
         glVertex2f(x, y+45);//Bottom left corner
-        glEnd();// Ends quad drawing
+        glEnd();// Ends quad drawing*/
+    	
     }
 }
