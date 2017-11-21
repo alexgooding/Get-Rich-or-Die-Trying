@@ -23,7 +23,7 @@ public class Room{
    */
 	public Room(){
 		Location defaultLocation = new Location(50, 50 ,1);
-		setRoom(4, defaultLocation, 2, 1);
+		setRoom(4, defaultLocation, 4, 1);
 	}
 
 	/**
