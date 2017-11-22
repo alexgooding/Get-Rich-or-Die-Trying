@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class DungeonTest{
 
 	public static void main(String[] args){
-
+		
 		//Create a new dungeon.
 		Dungeon testDungeon = new Dungeon(30, 1);
 
@@ -36,6 +36,11 @@ public class DungeonTest{
 		}
 
 		map[50][50] = "x"; //x represents the first rooms location.
+		
+		//Allows you to see what order the rooms where generated in.
+		/*for(int i=0; i<testDungeon.getRooms().size(); i++){
+			map[testDungeon.getRooms().get(i).getRoomLocation().getX()+testDungeon.getRooms().get(i).getRoomSize()/2][testDungeon.getRooms().get(i).getRoomLocation().getY()+testDungeon.getRooms().get(i).getRoomSize()/2] = "" + testDungeon.getRooms().get(i).getRoomLocation().getRoomNumber();
+		}*/
 
 		//Prints out the map array.
 		for(int i=99; i>=0; i--){
@@ -47,6 +52,7 @@ public class DungeonTest{
 	
 		//Prints out the number of rooms in the dungeon
 		System.out.println("The number of rooms in the dungeon is: " + testDungeon.getRooms().size());
+
 	}
 
 }
