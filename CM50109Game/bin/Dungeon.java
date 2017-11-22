@@ -96,42 +96,51 @@ public class Dungeon{
    * @return void.
    */  
   public void generateRooms(Room initialRoom){
-  	while(roomCounter<numberOfRooms){
-	  	for(int i=0; i<initialRoom.getNumberOfDoors(); i++){
-	  		Location newLocation = new Location();
-	  		switch(initialRoom.getDoorLocations().get(i).getDirection()){
-	  			case 's':
-	  				newLocation = new Location(initialRoom.getRoomLocation().getX(), initialRoom.getRoomLocation().getY()-initialRoom.getRoomSize(), 1);
-	  				break;
-	  			case 'e':
-	  				newLocation = new Location(initialRoom.getRoomLocation().getX()+initialRoom.getRoomSize(), initialRoom.getRoomLocation().getY(), 1);
-	  				break;
-	  			case 'n':
-	  				newLocation = new Location(initialRoom.getRoomLocation().getX(), initialRoom.getRoomLocation().getY()+initialRoom.getRoomSize(), 1);
-	  				break;	
-	  			case 'w':
-	  				newLocation = new Location(initialRoom.getRoomLocation().getX()-initialRoom.getRoomSize(), initialRoom.getRoomLocation().getY(), 1);
-	  				break;
-	  		}
-	  		boolean repeatFlag = false; //Flags whether the room already exists in the rooms list.
-	  		for(int j=0; j<rooms.size(); j++){
-	  			repeatFlag = newLocation.equals(rooms.get(j).getRoomLocation());
-	  			if(repeatFlag == true){
-	  				j = rooms.size();
-	  			}
-	  		}
-	  		if(repeatFlag==false){
-	  			Random rand = new Random();
-					int randomDoorNumber = rand.nextInt(2)+2;
-	  			Room newRoom = new Room(initialRoom.getRoomSize(), newLocation, randomDoorNumber, 1);
-	  			/*if(roomCounter>=numberOfRooms){ //Limits the number of rooms to the correct amount.
-	  				return;
-	  			}*/
-	  			rooms.add(newRoom);
-	  			roomCounter++;
-	  			generateRooms(newRoom);
-	  		}
-			}
+  	for(int i=0; i<initialRoom.getNumberOfDoors(); i++){
+  		Location newLocation = new Location();
+  		switch(initialRoom.getDoorLocations().get(i).getDirection()){
+  			case 's':
+  				newLocation = new Location(initialRoom.getRoomLocation().getX(), initialRoom.getRoomLocation().getY()-initialRoom.getRoomSize(), 1);
+  				break;
+  			case 'e':
+  				newLocation = new Location(initialRoom.getRoomLocation().getX()+initialRoom.getRoomSize(), initialRoom.getRoomLocation().getY(), 1);
+  				break;
+  			case 'n':
+  				newLocation = new Location(initialRoom.getRoomLocation().getX(), initialRoom.getRoomLocation().getY()+initialRoom.getRoomSize(), 1);
+  				break;	
+  			case 'w':
+  				newLocation = new Location(initialRoom.getRoomLocation().getX()-initialRoom.getRoomSize(), initialRoom.getRoomLocation().getY(), 1);
+  				break;
+  		}
+  		boolean repeatFlag = false; //Flags whether the room already exists in the rooms list.
+  		for(int j=0; j<rooms.size(); j++){
+  			repeatFlag = newLocation.equals(rooms.get(j).getRoomLocation());
+  			if(repeatFlag == true){
+  				j = rooms.size();
+  			}
+  		}
+  		if(repeatFlag==false){
+  			Random rand = new Random();
+				//int randomDoorNumber = rand.nextInt(4);
+				double nextDoorNumber = rand.nextGaussian()*1+1.5;
+				int randomDoorNumber; 
+				randomDoorNumber = (int) nextDoorNumber;
+				if(randomDoorNumber>4){
+					randomDoorNumber = 4;
+				}
+				if(randomDoorNumber<0){
+					randomDoorNumber = 0;
+				}
+  			Room newRoom = new Room(initialRoom.getRoomSize(), newLocation, randomDoorNumber, 1);
+  			if(roomCounter>=numberOfRooms){ //Limits the number of rooms to the correct amount.
+  				return;
+  			}
+  			rooms.add(newRoom);
+  			roomCounter++;
+  			generateRooms(newRoom);
+  		}
   	}
-  }
+	}
 }
+
+

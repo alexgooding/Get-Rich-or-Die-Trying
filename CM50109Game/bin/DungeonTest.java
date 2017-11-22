@@ -1,22 +1,25 @@
+import java.util.ArrayList;
+
 public class DungeonTest{
 
 	public static void main(String[] args){
 
 		//Create a new dungeon.
-		Dungeon testDungeon = new Dungeon(10, 1);
+		Dungeon testDungeon = new Dungeon(30, 1);
 
 		//Prints out the room locations.
-		for(int i=0; i < testDungeon.getRooms().size(); i++){
+		/*for(int i=0; i < testDungeon.getRooms().size(); i++){
 			testDungeon.getRooms().get(i).getRoomLocation().printLocation();
-		}
+		}*/
 
 		//Makes an array that represents a map to visualise the dungeon.
-		String[][] map = new String[100][100];
+		String[][] map = new String[100][75];
 		for(int i=0; i<100; i++){
-			for(int j=0; j<100; j++){
+			for(int j=0; j<75; j++){
 				map[i][j] = " ";
 			}
 		}
+
 
 		//Stores the boundaries of the rooms as dots in the map array.
 		for(int i=0; i<testDungeon.getRooms().size(); i++){
@@ -32,13 +35,18 @@ public class DungeonTest{
 			}
 		}
 
+		map[50][50] = "x"; //x represents the first rooms location.
+
 		//Prints out the map array.
-		for(int i=0; i<100; i++){
-			for(int j=0; j<100; j++){
+		for(int i=99; i>=0; i--){
+			for(int j=0; j<75; j++){
 				System.out.printf("%s", map[i][j]);
 			}
 			System.out.printf("\n");		
 		}
+	
+		//Prints out the number of rooms in the dungeon
+		System.out.println("The number of rooms in the dungeon is: " + testDungeon.getRooms().size());
 	}
 
 }
