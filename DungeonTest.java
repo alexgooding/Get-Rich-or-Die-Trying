@@ -36,6 +36,13 @@ public class DungeonTest{
 		}
 
 		map[50][50] = "x"; //x represents the first rooms location.
+
+		//Stores the locations of gold in the rooms as a ¤.
+		for(int i=0; i<testDungeon.getRooms().size(); i++){
+			for(int j=0; j<testDungeon.getRooms().get(i).getRoomGold().size(); j++){
+				map[testDungeon.getRooms().get(i).getRoomGold().get(j).getItemLocation().getX()][testDungeon.getRooms().get(i).getRoomGold().get(j).getItemLocation().getY()]= "¤";
+			}
+		}
 		
 		//Allows you to see what order the rooms where generated in.
 		/*for(int i=0; i<testDungeon.getRooms().size(); i++){

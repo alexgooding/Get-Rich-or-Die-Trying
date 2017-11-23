@@ -1,3 +1,4 @@
+import java.util.*;
 import java.util.Random;
 import java.util.ArrayList;
 
@@ -9,10 +10,12 @@ public class Room{
    * numberOfDoors is the amount of doors in the room, including the door entered through.
    * roomDifficulty is an integer from 1-3 that can be used as a multiplier within methods to make rooms more complex.
    * doorLocations is a list of the door locations of the room. 
+   * roomGold is a list of the Gold objects within the room.
    */
 	private int roomSize, numberOfDoors, roomDifficulty;
 	private Location roomLocation = new Location();
-	private ArrayList<Door> doorLocations = new ArrayList<Door>(); 
+	private ArrayList<Door> doorLocations = new ArrayList<Door>();
+	private ArrayList<Gold> roomGold = new ArrayList<Gold>(); 
 
 	// =========================
   // Constructors
@@ -70,6 +73,16 @@ public class Room{
 		for(int i=0; i<numberOfDoors; i++){
 			doorLocations.add(posDoorLocations[randIndex[i]]);
 		}
+
+		//Generate random gold locations. The amount of gold is relative to roomDifficulty.
+		int goldAmount;
+		if(roomSize-4<=0){
+			goldAmount = 1;
+		}
+		else{
+			goldAmount = (roomSize-4)*6/roomDifficulty;
+		}
+		setRandomGold(goldAmount);
   }
 
   /**
@@ -123,6 +136,16 @@ public class Room{
 	}
 
 	/**
+   * Accessor for roomGold. 
+   *
+   * @param  none.
+   * @return The roomGold list.
+   */   
+	public ArrayList<Gold> getRoomGold(){
+		return roomGold;
+	}
+
+	/**
    * Calculates and accesses boundaries. 
    *
    * @param  roomSize    - the size of the room.
@@ -132,18 +155,22 @@ public class Room{
 	public Location[] getRoomBoundaries(){
 		Location[] boundaries = new Location[4*roomSize];
 
+		//South boundaries
 		for(int i=0; i<=roomSize-1; i++){
 			Location nextLocation = new Location(roomLocation.getX()+i, roomLocation.getY(), roomLocation.getRoomNumber());
 			boundaries[i] = nextLocation;
 		} 
+		//East boundaries
 		for(int i=0; i<=roomSize-1; i++){
 			Location nextLocation = new Location(roomLocation.getX()+roomSize, roomLocation.getY()+i, roomLocation.getRoomNumber());
 			boundaries[i+roomSize] = nextLocation;
 		}
+		//North boundaries
 		for(int i=0; i<=roomSize-1; i++){
 			Location nextLocation = new Location(roomLocation.getX()+roomSize-i, roomLocation.getY()+roomSize, roomLocation.getRoomNumber());
 			boundaries[i+(2*roomSize)] = nextLocation;
 		}
+		//West boundaries
 		for(int i=0; i<=roomSize-1; i++){
 			Location nextLocation = new Location(roomLocation.getX(), roomLocation.getY()+roomSize-i, roomLocation.getRoomNumber());
 			boundaries[i+(3*roomSize)] = nextLocation;
@@ -160,13 +187,29 @@ public class Room{
    *
    * @return A random location within the room.
    */
-
   public Location randomRoomLocation(){
 		Random rand = new Random();
-		int x1 = rand.nextInt(roomSize);
-		int y1 = rand.nextInt(roomSize);
+		int x1 = rand.nextInt(roomSize-1)+1;
+		int y1 = rand.nextInt(roomSize-1)+1;
 		Location rLocation = new Location(x1+roomLocation.getX(), y1+roomLocation.getY(), roomLocation.getRoomNumber());
 		return rLocation;
 	}
 
+	/**
+ 	 * Randomly generates gold in a room. 
+   *
+   * @param goldBound - the number of locations in the room gold will be generated in.
+   * @return void.
+   */
+	public void setRandomGold(int goldBound){
+		for(int i=0; i<goldBound; i++){
+			Location newLocation = new Location();
+			newLocation = randomRoomLocation();
+			roomGold.add(new Gold(newLocation, 1));
+		}
+		Set<Gold> removeDuplicates = new HashSet<>();
+		removeDuplicates.addAll(roomGold);
+		roomGold.clear();
+		roomGold.addAll(removeDuplicates);	
+	}
 }

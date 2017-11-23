@@ -12,7 +12,7 @@ public class Door{
   // =========================
 
   /**
-   * Default constructor - this initialises doorLocation and direction to ((0, 0, 1), '').
+   * Default constructor - this initialises doorLocation and direction to ((0, 0, 1), 'n').
    */
 	public Door(){
 		Location defaultLocation = new Location(0, 0 ,1);
@@ -20,8 +20,8 @@ public class Door{
 	}
 
 	/**
-   * Four-parameter version of the constructor. Initialiases (roomSize, roomLocation, numberOfDoors, roomDifficulty) to
-   * a room, which is supplied to the function.
+   * Two-parameter version of the constructor. Initialiases (doorLocation, direction) 
+   * to values supplied to the function.
    *
    * @param doorLocation - the location of the door.
    * @param direction    - indicates the wall the door is located on in a room.
