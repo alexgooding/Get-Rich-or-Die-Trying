@@ -5,13 +5,13 @@ import java.util.ArrayList;
 public class Room{
 
 	/**
-     * roomSize is the N in the NxN dimensions of a square room (NxN tiles).
-     * roomLocation is the location of the bottom left corner of the room.
-     * numberOfDoors is the amount of doors in the room, including the door entered through.
-     * roomDifficulty is an integer from 1-3 that can be used as a multiplier within methods to make rooms more complex.
-     * doorLocations is a list of the door locations of the room. 
-     * roomGold is a list of the Gold objects within the room.
-     */
+	* roomSize is the N in the NxN dimensions of a square room (NxN tiles).
+	* roomLocation is the location of the bottom left corner of the room.
+	* numberOfDoors is the amount of doors in the room, including the door entered through.
+	* roomDifficulty is an integer from 1-3 that can be used as a multiplier within methods to make rooms more complex.
+	* doorLocations is a list of the door locations of the room. 
+	* roomGold is a list of the Gold objects within the room.
+	*/
 	private int roomSize, numberOfDoors, roomDifficulty;
 	private Location roomLocation = new Location();
 	private ArrayList<Door> doorLocations = new ArrayList<Door>();
@@ -22,22 +22,22 @@ public class Room{
 	// =========================
 
 	/**
-     * Default constructor - this initialises x, y and roomNumber to the point (0, 0, 1).
-     */
+	* Default constructor - this initialises x, y and roomNumber to the point (0, 0, 1).
+	*/
 	public Room(){
 		Location defaultLocation = new Location(50, 50 ,1);
 		setRoom(4, defaultLocation, 4, 1);
 	}
 
 	/**
-     * Four-parameter version of the constructor. Initialiases (roomSize, roomLocation, numberOfDoors, roomDifficulty) to
-     * a room, which is supplied to the function.
-     *
-     * @param roomSize       - the N in the NxN dimensions of a square room.
-     * @param roomLocation   - the location of the bottom left corner of the room.
-	 * @param numberOfDoors  - the amount of doors in the room, including the door entered through.
-	 * @param roomDifficulty - the complexity of the room.
-     */
+	* Four-parameter version of the constructor. Initialiases (roomSize, roomLocation, numberOfDoors, roomDifficulty) to
+	* a room, which is supplied to the function.
+	*
+	* @param roomSize       - the N in the NxN dimensions of a square room.
+	* @param roomLocation   - the location of the bottom left corner of the room.
+	* @param numberOfDoors  - the amount of doors in the room, including the door entered through.
+	* @param roomDifficulty - the complexity of the room.
+	*/
 	public Room(int roomSize, Location roomLocation, int numberOfDoors, int roomDifficulty){
 		setRoom(roomSize, roomLocation, numberOfDoors, roomDifficulty);
 	}
@@ -45,15 +45,15 @@ public class Room{
 	// =========================
 	// Mutators and Accessors
 	// =========================
-    
+
 	/**
-     * Mutator for instance variables - sets the room parameters.
-     *
-     * @param roomSize       - new dimension N for this location. Player can only move within dimensions N-2.
-     * @param roomLocation   - new location of the room.
-	 * @param numberOfDoors  - new number of doors for this room.
-	 * @param roomDifficulty - new room difficulty for this room.
-     */
+	* Mutator for instance variables - sets the room parameters.
+	*
+	* @param roomSize       - new dimension N for this location. Player can only move within dimensions N-2.
+	* @param roomLocation   - new location of the room.
+	* @param numberOfDoors  - new number of doors for this room.
+	* @param roomDifficulty - new room difficulty for this room.
+	*/
 	public void setRoom(int roomSize, Location roomLocation, int numberOfDoors, int roomDifficulty){
 	  	this.roomSize = roomSize;
 	  	this.roomLocation = roomLocation;
@@ -86,72 +86,72 @@ public class Room{
   	}
 
 	/**
-     * Accessor for the roomSize. 
-     *
-     * @param  none.
-     * @return The size of this room.
-     */   
+	* Accessor for the roomSize. 
+	*
+	* @param  none.
+	* @return The size of this room.
+	*/   
 	public int getRoomSize(){
 		return roomSize;
 	}
 
 	/**
-     * Accessor for the roomLocation. 
-     *
-     * @param  none.
-     * @return The location of the room.
-     */   
+	* Accessor for the roomLocation. 
+	*
+	* @param  none.
+	* @return The location of the room.
+	*/   
 	public Location getRoomLocation(){
 		return roomLocation;
 	}
 	
 	/**
-     * Accessor for numberOfDoors. 
-     *
-     * @param  none.
-     * @return The number of doors in the room.
-     */   
+	* Accessor for numberOfDoors. 
+	*
+	* @param  none.
+	* @return The number of doors in the room.
+	*/   
 	public int getNumberOfDoors(){
 		return numberOfDoors;
 	}
 
 	/**
-     * Accessor for roomDifficulty. 
-     *
-     * @param  none.
-     * @return The difficulty of the room.
-     */   
+	* Accessor for roomDifficulty. 
+	*
+	* @param  none.
+	* @return The difficulty of the room.
+	*/   
 	public int getRoomDifficulty(){
 		return roomDifficulty;
 	}
 
 	/**
-     * Accessor for doorLocations. 
-     *
-     * @param  none.
-     * @return The locations of the doors in the room.
-     */   
+	* Accessor for doorLocations. 
+	*
+	* @param  none.
+	* @return The locations of the doors in the room.
+	*/   
 	public ArrayList<Door> getDoorLocations(){
 		return doorLocations;
 	}
 
 	/**
-     * Accessor for roomGold. 
-     *
-     * @param  none.
-     * @return The roomGold list.
-     */   
+	* Accessor for roomGold. 
+	*
+	* @param  none.
+	* @return The roomGold list.
+	*/   
 	public ArrayList<Gold> getRoomGold(){
 		return roomGold;
 	}
 
 	/**
-     * Calculates and accesses boundaries. 
-     *
-     * @param  roomSize    - the size of the room.
-     * @param roomLocation - the location of the room.
-     * @return The boundaries of the room in an array in an anti-clockwise fashion.
-     */ 
+	* Calculates and accesses boundaries. 
+	*
+	* @param  roomSize    - the size of the room.
+	* @param roomLocation - the location of the room.
+	* @return The boundaries of the room in an array in an anti-clockwise fashion.
+	*/ 
 	public Location[] getRoomBoundaries(){
 		Location[] boundaries = new Location[4*roomSize];
 
@@ -183,10 +183,10 @@ public class Room{
 	// =========================
 
 	/**
- 	 * Randomly generates a location within a certain room. 
-     *
-     * @return A random location within the room.
-     */
+	 * Randomly generates a location within a certain room. 
+	*
+	* @return A random location within the room.
+	*/
   	public Location randomRoomLocation(){
 		Random rand = new Random();
 		int x1 = rand.nextInt(roomSize-1)+1;
@@ -196,11 +196,11 @@ public class Room{
 	}
 
 	/**
- 	 * Randomly generates gold in a room. 
-  	 *
-   	 * @param goldBound - the number of locations in the room gold will be generated in.
-   	 * @return void.
-     */
+	* Randomly generates gold in a room. 
+	*
+	* @param goldBound - the number of locations in the room gold will be generated in.
+	* @return void.
+	*/
 	public void setRandomGold(int goldBound){
 		for(int i=0; i<goldBound; i++){
 			Location newLocation = new Location();
