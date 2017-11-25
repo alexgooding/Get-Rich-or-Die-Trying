@@ -190,9 +190,9 @@ public class Dungeon{
 
 		for(int i=0; i<dungeonWalls.size(); i++){
 		  	for(int j=0; j<dungeonDoorLocations.size(); j++){
-		    	if(dungeonWalls.get(i).equals(dungeonDoorLocations.get(j)) == true){
-		      		dungeonWalls.remove(i);
-		    	}
+		    		if(dungeonWalls.get(i).equals(dungeonDoorLocations.get(j)) == true){
+		      			dungeonWalls.remove(i);
+		    		}
 		  	}
 		}
 	}
