@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Dungeon{
 
-	/*
+	/**
 	* numberOfRooms is an integer representing how many rooms we want to generate.
 	* dungeonDifficulty is an integer from 1-3 representing the difficulty of the dungeon.
 	* rooms is a list of all the rooms stored in the dungeon.
