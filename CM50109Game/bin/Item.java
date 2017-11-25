@@ -6,47 +6,48 @@ public class Item{
 	protected Location itemLocation = new Location();
 
 	// =========================
-  // Constructors
-  // =========================
+	// Constructors
+	// =========================
 
-  /**
-   * Default constructor - this initialises itemLocation to (0, 0, 1).
-   */
+	/**
+	 * Default constructor - this initialises itemLocation to (0, 0, 1).	
+	 */
 	public Item(){
 		Location defaultLocation = new Location(0, 0 ,1);
 		setItem(defaultLocation);
 	}
 
 	/**
-   * One-parameter version of the constructor. Initialiases itemLocation to
-   * a location, which is supplied to the function.
-   *
-   * @param itemLocation - the location of the door.
-   */
+	 * One-parameter version of the constructor. Initialiases itemLocation to 
+	 * a location, which is supplied to the function.
+	 *
+	 * @param itemLocation - the location of the door.
+	 */
 	public Item(Location itemLocation){
 		setItem(itemLocation);
 	}
 
 	// =========================
-  // Mutators and Accessors
-  // =========================
-    
-  /**
-   * Mutator for instance variables - sets the item parameter.
-   *
-   * @param doorLocation - new location of the item.
-   */
-  public void setItem(Location itemLocation){
-  	this.itemLocation = itemLocation;
+	// Mutators and Accessors
+	// =========================
+
+	/**
+     * Mutator for instance variables - sets the item parameter.
+     *
+     * @param doorLocation - new location of the item.
+     */
+	public void setItem(Location itemLocation){
+  		this.itemLocation = itemLocation;
   	}
 
-  /**
-   * Accessor for itemLocation. 
-   *
-   * @param  none.
-   * @return The location of the item.
-   */   
+	/**
+     * Accessor for itemLocation. 
+     * 
+     * @param  none.
+     * @return The location of the item.
+     */   
 	public Location getItemLocation(){
 		return itemLocation;
 	}
+	
 }

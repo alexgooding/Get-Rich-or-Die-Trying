@@ -20,21 +20,27 @@ public class DungeonTest{
 			}
 		}
 
-
+/*
 		//Stores the boundaries of the rooms as dots in the map array.
 		for(int i=0; i<testDungeon.getRooms().size(); i++){
 			for(int j=0; j<testDungeon.getRooms().get(i).getRoomBoundaries().length; j++){
 				map[testDungeon.getRooms().get(i).getRoomBoundaries()[j].getX()][testDungeon.getRooms().get(i).getRoomBoundaries()[j].getY()] = ".";
 			}
 		}
-
+*/
+		//Stores the boundaries of the rooms without doors as dots in the map array.
+		
+		for(int i=0; i<testDungeon.getDungeonWalls().size(); i++){
+			map[testDungeon.getDungeonWalls().get(i).getX()][testDungeon.getDungeonWalls().get(i).getY()] = ".";
+		}
+		
 		//Stores the door locations of the rooms as circles in the map array.
-		for(int i=0; i<testDungeon.getRooms().size(); i++){
+		/*for(int i=0; i<testDungeon.getRooms().size(); i++){
 			for(int j=0; j<testDungeon.getRooms().get(i).getDoorLocations().size(); j++){
 				map[testDungeon.getRooms().get(i).getDoorLocations().get(j).getDoorLocation().getX()][testDungeon.getRooms().get(i).getDoorLocations().get(j).getDoorLocation().getY()]= "o";
 			}
 		}
-
+*/
 		map[50][50] = "x"; //x represents the first rooms location.
 
 		//Stores the locations of gold in the rooms as a ¤.

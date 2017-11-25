@@ -8,4 +8,5 @@ public class GoldTest{
 		testGold.getItemLocation().printLocation();
 		System.out.println("The amount of gold in testGold is: " + testGold.getGoldAmount());
 	}
+	
 }
