@@ -158,7 +158,7 @@ public class Dungeon{
 				if(randomDoorNumber<0){
 					randomDoorNumber = 0;
 				}
-				Room newRoom = new Room(initialRoom.getRoomSize(), newLocation, randomDoorNumber, 1);
+				Room newRoom = new Room(initialRoom.getRoomSize(), newLocation, randomDoorNumber, 1, true);
 				if(roomCounter>=numberOfRooms){ //Limits the number of rooms to the correct amount.
 					return;
 				}

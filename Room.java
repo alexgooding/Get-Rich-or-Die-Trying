@@ -10,12 +10,15 @@ public class Room{
 	* numberOfDoors is the amount of doors in the room, including the door entered through.
 	* roomDifficulty is an integer from 1-3 that can be used as a multiplier within methods to make rooms more complex.
 	* doorLocations is a list of the door locations of the room. 
+	* botFlag indicates whether a bot is present in the room or not.
 	* roomGold is a list of the Gold objects within the room.
 	*/
 	private int roomSize, numberOfDoors, roomDifficulty;
 	private Location roomLocation = new Location();
+	private boolean botFlag;
 	private ArrayList<Door> doorLocations = new ArrayList<Door>();
-	private ArrayList<Gold> roomGold = new ArrayList<Gold>(); 
+	private ArrayList<Gold> roomGold = new ArrayList<Gold>();
+	Bot roomBot = new Bot(); 
 
 	// =========================
 	// Constructors
@@ -26,7 +29,7 @@ public class Room{
 	*/
 	public Room(){
 		Location defaultLocation = new Location(50, 50 ,1);
-		setRoom(4, defaultLocation, 4, 1);
+		setRoom(4, defaultLocation, 4, 1, true);
 	}
 
 	/**
@@ -37,9 +40,10 @@ public class Room{
 	* @param roomLocation   - the location of the bottom left corner of the room.
 	* @param numberOfDoors  - the amount of doors in the room, including the door entered through.
 	* @param roomDifficulty - the complexity of the room.
+	* @param botFlag        - whether a bot is in the room or not.
 	*/
-	public Room(int roomSize, Location roomLocation, int numberOfDoors, int roomDifficulty){
-		setRoom(roomSize, roomLocation, numberOfDoors, roomDifficulty);
+	public Room(int roomSize, Location roomLocation, int numberOfDoors, int roomDifficulty, boolean botFlag){
+		setRoom(roomSize, roomLocation, numberOfDoors, roomDifficulty, botFlag);
 	}
 
 	// =========================
@@ -53,12 +57,14 @@ public class Room{
 	* @param roomLocation   - new location of the room.
 	* @param numberOfDoors  - new number of doors for this room.
 	* @param roomDifficulty - new room difficulty for this room.
+	* @param botFlag        - new flag for whether the bot is in the room or not.
 	*/
-	public void setRoom(int roomSize, Location roomLocation, int numberOfDoors, int roomDifficulty){
+	public void setRoom(int roomSize, Location roomLocation, int numberOfDoors, int roomDifficulty, boolean botFlag){
 	  	this.roomSize = roomSize;
 	  	this.roomLocation = roomLocation;
 		this.numberOfDoors = numberOfDoors;
 		this.roomDifficulty = roomDifficulty;
+		this.botFlag = botFlag;
 		//Door locations are randomly chosen out of center coordinates of walls.
 		Door[] posDoorLocations = new Door[4]; //All four possible door locations.
 		//South
@@ -83,6 +89,16 @@ public class Room{
 			goldAmount = (roomSize-4)*6/roomDifficulty;
 		}
 		setRandomGold(goldAmount);
+
+		//Generate a bot within the room if botFlag is true.
+		if(botFlag == true){
+			Location newBotLocation = new Location();
+			newBotLocation = randomRoomLocation();
+			roomBot.setBot(newBotLocation);
+		}
+		else{
+			roomBot = null;
+		}
   	}
 
 	/**
@@ -123,6 +139,16 @@ public class Room{
 	*/   
 	public int getRoomDifficulty(){
 		return roomDifficulty;
+	}
+
+	/**
+	* Accessor for botFlag. 
+	*
+	* @param  none.
+	* @return The boolean that indicates whether a bot is in the room or not.
+	*/   
+	public boolean getBotFlag(){
+		return botFlag;
 	}
 
 	/**
@@ -178,12 +204,21 @@ public class Room{
 		return boundaries;
 	}
 
+	/**
+	* Accessor for roomBot's location. 
+	*
+	* @return The location of roomBot.
+	*/ 
+	public Location getRoomBotLocation(){
+		return roomBot.getBotLocation();
+	}
+
 	// =========================
 	// Additional Methods
 	// =========================
 
 	/**
-	 * Randomly generates a location within a certain room. 
+	* Randomly generates a location within a certain room. 
 	*
 	* @return A random location within the room.
 	*/
@@ -211,6 +246,46 @@ public class Room{
 		removeDuplicates.addAll(roomGold);
 		roomGold.clear();
 		roomGold.addAll(removeDuplicates);	
+	}
+
+	/**
+	* Randomly moves the roomBot one tile taking into account the room boundaries.
+	*
+	* @return void.
+	*/
+	public void moveBotRandomly(){
+		String s = "nesw";
+		boolean moveSuccess;
+		int index;
+		do{
+			moveSuccess = true;
+			Random random = new Random();
+    		index = random.nextInt(s.length());
+    		for(int i=0; i<getRoomBoundaries().length; i++){
+    			if(updateLocation(getRoomBotLocation(), s.charAt(index)).equals(getRoomBoundaries()[i])){
+    				moveSuccess = false;
+    			}
+    		}
+		}while(moveSuccess == false);
+		roomBot.updateBotLocation(s.charAt(index));
+	}
+
+	/**
+	* Updates a given location based on the direction of movement.
+	*
+	* @param l - the given location.
+	* @param c - the given direction of movement.
+	* @return the new location.
+	*/
+	public Location updateLocation(Location l, char c){
+		Location newLocation = new Location(l.getX(), l.getY(), l.getRoomNumber());
+		switch(c){
+			case 'n': newLocation.setY(l.getY()+1); break;
+			case 'e': newLocation.setX(l.getX()+1); break;
+			case 's': newLocation.setY(l.getY()-1); break;
+			case 'w': newLocation.setX(l.getX()-1); break;
+		}
+		return newLocation;
 	}
 	
 }

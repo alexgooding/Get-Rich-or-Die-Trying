@@ -149,10 +149,10 @@ public class Location{
   	public boolean equals(Location l){
     	if(x==l.getX() && y==l.getY()){
       	return true;
-    }
-    else{
-      	return false;
-    }
-  }
+    	}
+    	else{
+      		return false;
+    	}
+  	}
 
 }

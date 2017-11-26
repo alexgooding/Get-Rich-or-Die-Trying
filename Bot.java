@@ -50,4 +50,32 @@ public class Bot{
 		return botLocation;
 	}
 
+	// =========================
+	// Additional Methods
+	// =========================
+
+	/**
+	* updates the bots location dependent on direction of movement. 
+	*
+	* @param c - the direction the bot moves in.
+	* @return void.
+	*/
+	public void updateBotLocation(char c){
+		if(c == 'n'){
+			botLocation.setY(botLocation.getY()+1);
+		}
+		else if(c == 'e'){
+			botLocation.setX(botLocation.getX()+1);
+		}
+		else if(c == 's'){
+			botLocation.setY(botLocation.getY()-1);
+		}
+		else if(c == 'w'){
+			botLocation.setX(botLocation.getX()-1);
+		}
+		else{
+			return;
+		}
+	}
+
 }
