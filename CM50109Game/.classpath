@@ -104,5 +104,8 @@
 	<classpathentry kind="lib" path="Lib/lwjgl.jar"/>
 	<classpathentry kind="lib" path="Lib/joml-1.9.6.jar"/>
 	<classpathentry kind="lib" path="Lib"/>
+	<classpathentry kind="lib" path="Lib/jinput.jar"/>
+	<classpathentry kind="lib" path="Lib/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="Lib/slick.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

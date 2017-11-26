@@ -1,3 +1,11 @@
-Credits: DAWNLIKE
+Credits: 
+
+- Tiles
+DAWNLIKE
 16x16 Universal Rogue-like tileset v1.81
 https://opengameart.org/content/dawnlike-16x16-universal-rogue-like-tileset-v181
+
+- Font
+Saesarez Novandito
+Dungeon
+https://www.dafont.com/dungeon-sn.font
