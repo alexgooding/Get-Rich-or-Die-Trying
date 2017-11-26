@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Dungeon{
 
-	/**
+	/*
 	* numberOfRooms is an integer representing how many rooms we want to generate.
 	* dungeonDifficulty is an integer from 1-3 representing the difficulty of the dungeon.
 	* rooms is a list of all the rooms stored in the dungeon.
@@ -158,7 +158,7 @@ public class Dungeon{
 				if(randomDoorNumber<0){
 					randomDoorNumber = 0;
 				}
-				Room newRoom = new Room(initialRoom.getRoomSize(), newLocation, randomDoorNumber, 1);
+				Room newRoom = new Room(initialRoom.getRoomSize(), newLocation, randomDoorNumber, 1, true);
 				if(roomCounter>=numberOfRooms){ //Limits the number of rooms to the correct amount.
 					return;
 				}
@@ -190,9 +190,9 @@ public class Dungeon{
 
 		for(int i=0; i<dungeonWalls.size(); i++){
 		  	for(int j=0; j<dungeonDoorLocations.size(); j++){
-		    		if(dungeonWalls.get(i).equals(dungeonDoorLocations.get(j)) == true){
-		      			dungeonWalls.remove(i);
-		    		}
+		    	if(dungeonWalls.get(i).equals(dungeonDoorLocations.get(j)) == true){
+		      		dungeonWalls.remove(i);
+		    	}
 		  	}
 		}
 	}

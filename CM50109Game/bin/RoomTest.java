@@ -6,7 +6,7 @@ public class RoomTest{
 
 		//Generate a new location and a new room.
 		Location testLocation = new Location();
-		Room testRoom = new Room(4, testLocation, 2, 1);
+		Room testRoom = new Room(4, testLocation, 2, 1, true);
 		//Update testLocation to a random location within testRoom
 		testLocation = testRoom.randomRoomLocation();
 		System.out.print("The coordinates of the test location within testRoom are ");
@@ -28,6 +28,20 @@ public class RoomTest{
 		for(int i=0; i<testRoom.getNumberOfDoors(); i++){
 			System.out.println("The door is at cardinal point:" + testRoom.getDoorLocations().get(i).getDirection());
 		}
+
+		//Test bot movement.
+		System.out.println("roomBot's current location is: ");
+		testRoom.getRoomBotLocation().printLocation();
+		//Randomly move the bot.
+		testRoom.moveBotRandomly();
+		System.out.println("roomBot's new location is: ");
+		testRoom.getRoomBotLocation().printLocation();
+		testRoom.moveBotRandomly();
+		System.out.println("roomBot's new location is: ");
+		testRoom.getRoomBotLocation().printLocation();
+		testRoom.moveBotRandomly();
+		System.out.println("roomBot's new location is: ");
+		testRoom.getRoomBotLocation().printLocation();
 	}
 
 }
