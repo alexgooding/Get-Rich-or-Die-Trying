@@ -13,6 +13,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 //version v1.0: Ray: Initial Create
 //version v1.1: Ray: Add collision logic with walls, gold and bot. 
+//version v1.2: Ray: Fixed bug for moving towards wall
 
 public class Map extends BasicGameState {
 
@@ -141,7 +142,7 @@ public class Map extends BasicGameState {
 			
 			for(int i=0; i<dungeonWalls.size(); i++) {
 				if(playerPosX == dungeonWalls.get(i).getX()*16-500 && playerPosY == dungeonWalls.get(i).getY()*16-600) {
-					playerPosY +=16f;
+					playerPosY +=16f;	//v1.2
 				}
 			}
 			
@@ -168,7 +169,7 @@ public class Map extends BasicGameState {
 			
 			for(int i=0; i<dungeonWalls.size(); i++) {
 				if(playerPosX == dungeonWalls.get(i).getX()*16-500 && playerPosY == dungeonWalls.get(i).getY()*16-600) {
-					playerPosY +=16f;
+					playerPosY -=16f;	//v1.2
 				}
 			}
 			
@@ -194,7 +195,7 @@ public class Map extends BasicGameState {
 			
 			for(int i=0; i<dungeonWalls.size(); i++) {
 				if(playerPosX == dungeonWalls.get(i).getX()*16-500 && playerPosY == dungeonWalls.get(i).getY()*16-600) {
-					playerPosY +=16f;
+					playerPosX +=16f;	//v1.2
 				}
 			}
 			
@@ -220,7 +221,7 @@ public class Map extends BasicGameState {
 			
 			for(int i=0; i<dungeonWalls.size(); i++) {
 				if(playerPosX == dungeonWalls.get(i).getX()*16-500 && playerPosY == dungeonWalls.get(i).getY()*16-600) {
-					playerPosY +=16f;
+					playerPosX -=16f;	//v1.2
 				}
 			}
 			
