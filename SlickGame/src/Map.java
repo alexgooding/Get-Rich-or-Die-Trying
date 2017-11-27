@@ -12,10 +12,16 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 //version v1.0: Ray: Initial Create
+//version v1.1: Ray: Add collision logic with walls, gold and bot. 
 
 public class Map extends BasicGameState {
 
 	Image tiles, door, wall, player, gold, bot;	//Images
+	
+	//v1.1
+	private int goldCounter;	//For counting the total gold the player collected
+	private boolean died;		//died = true when player hit the bot
+
 	
 	//Getting Boundaries
 	private ArrayList<Location> dungeonWalls = new ArrayList<Location>();
@@ -53,52 +59,72 @@ public class Map extends BasicGameState {
 		// Set Player position to the first room first wall created, (-500)=just want to make it visible, (*16)=image resolution, (+16)=next tile of the wall
 		playerPosX = dungeonWalls.get(0).getX()*16-500+16;
 		playerPosY = dungeonWalls.get(0).getY()*16-600+16;
+		
+		goldCounter = 0;
+		died = false;
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics graphics) throws SlickException {
 		
-		//Render the dungeon
-		
-		for(int i=0; i<dungeonWalls.size(); i++) {
-			float wallsPosX = dungeonWalls.get(i).getX()*16;
-			float wallsPosY = dungeonWalls.get(i).getY()*16;
-			System.out.println("WallX: " + wallsPosX);
-			System.out.println("WallY: " + wallsPosY);
-			wall.draw(wallsPosX-500, wallsPosY-600);
+		// v1.1 -- check if player died, if died then end game
+		if(died == false) {
+			
+			// v1.1 -- if player collected 5 golds then move to next level
+			if(goldCounter == 5) {
+				this.init(gc, sbg);	//Re-initiate the game
+			}
+			else {
+
+				//Render the dungeon
+
+				for(int i=0; i<dungeonWalls.size(); i++) {
+					float wallsPosX = dungeonWalls.get(i).getX()*16;
+					float wallsPosY = dungeonWalls.get(i).getY()*16;
+					//System.out.println("WallX: " + wallsPosX);
+					//System.out.println("WallY: " + wallsPosY);
+					wall.draw(wallsPosX-500, wallsPosY-600);
+				}
+
+
+				for(int i=0; i<dungeonDoorLocations.size(); i++) {
+					float doorPosX = dungeonDoorLocations.get(i).getX()*16;
+					float doorPosY = dungeonDoorLocations.get(i).getY()*16;
+					//System.out.println("DoorX: " + doorPosX);
+					//System.out.println("DoorY: " + doorPosY);
+					door.draw(doorPosX-500, doorPosY-600);
+				}
+
+				for(int i=0; i<roomGold.size(); i++) {
+					float goldPosX = roomGold.get(i).getX()*16;
+					float goldPosY = roomGold.get(i).getY()*16;
+					//System.out.println("GoldX: " + goldPosX);
+					//System.out.println("GoldY: " + goldPosY);
+					gold.draw(goldPosX-500, goldPosY-600);
+				}
+
+				for(int i=0; i<dungeonBotLocations.size(); i++) {
+					float botPosX = dungeonBotLocations.get(i).getX()*16;
+					float botPosY = dungeonBotLocations.get(i).getY()*16;
+					//System.out.println("BotX: " + botPosX);
+					//System.out.println("BotY: " + botPosY);
+					bot.draw(botPosX-500, botPosY-600);
+				}
+
+				// Draw the player
+				player.draw(playerPosX,playerPosY);
+
+				//Track player position
+				graphics.drawString("X: " + playerPosX + " Y: " + playerPosY, 500, 20);
+				
+				//v1.1 -- Display of how much gold the player collected
+				graphics.drawString("Gold Collected: " + goldCounter, 500, 500);
+			}
 		}
-
-
-		for(int i=0; i<dungeonDoorLocations.size(); i++) {
-			float doorPosX = dungeonDoorLocations.get(i).getX()*16;
-			float doorPosY = dungeonDoorLocations.get(i).getY()*16;
-			System.out.println("DoorX: " + doorPosX);
-			System.out.println("DoorY: " + doorPosY);
-			door.draw(doorPosX-500, doorPosY-600);
+		else {
+			//v1.1 -- if died then do the following...
+			graphics.drawString("YOU DIED " , 400, 300);
 		}
-
-		for(int i=0; i<roomGold.size(); i++) {
-			float goldPosX = roomGold.get(i).getX()*16;
-			float goldPosY = roomGold.get(i).getY()*16;
-			System.out.println("GoldX: " + goldPosX);
-			System.out.println("GoldY: " + goldPosY);
-			gold.draw(goldPosX-500, goldPosY-600);
-		}
-
-		for(int i=0; i<dungeonBotLocations.size(); i++) {
-			float botPosX = dungeonBotLocations.get(i).getX()*16;
-			float botPosY = dungeonBotLocations.get(i).getY()*16;
-			System.out.println("BotX: " + botPosX);
-			System.out.println("BotY: " + botPosY);
-			bot.draw(botPosX-500, botPosY-600);
-		}
-		
-		// Draw the player
-		player.draw(playerPosX,playerPosY);
-		
-		//Track player position
-		graphics.drawString("X: " + playerPosX + " Y: " + playerPosY, 500, 20);
-
 	}
 
 	@Override
@@ -110,21 +136,106 @@ public class Map extends BasicGameState {
 		//Moving UP
 		if(input.isKeyPressed(Input.KEY_UP)) {
 			playerPosY -= 16f;
+			
+			//v1.1 -- check collision of walls, gold and bot with the boundaries from the arrayList
+			
+			for(int i=0; i<dungeonWalls.size(); i++) {
+				if(playerPosX == dungeonWalls.get(i).getX()*16-500 && playerPosY == dungeonWalls.get(i).getY()*16-600) {
+					playerPosY +=16f;
+				}
+			}
+			
+			for(int i=0; i<roomGold.size(); i++) {
+				if(playerPosX == roomGold.get(i).getX()*16-500 && playerPosY == roomGold.get(i).getY()*16-600) {
+					roomGold.remove(i);	//Gold disappear
+					goldCounter++;
+				}
+			}
+			
+			for(int i=0; i<dungeonBotLocations.size(); i++) {
+				if(playerPosX == dungeonBotLocations.get(i).getX()*16-500 && playerPosY == dungeonBotLocations.get(i).getY()*16-600) {
+					died = true;	//Set flag value
+				}
+			}
+			
 		}
 		
 		//Moving DOWN
 		if(input.isKeyPressed(Input.KEY_DOWN)) {
 			playerPosY += 16f;
+			
+			//v1.1 -- check collision of walls, gold and bot with the boundaries from the arrayList
+			
+			for(int i=0; i<dungeonWalls.size(); i++) {
+				if(playerPosX == dungeonWalls.get(i).getX()*16-500 && playerPosY == dungeonWalls.get(i).getY()*16-600) {
+					playerPosY +=16f;
+				}
+			}
+			
+			for(int i=0; i<roomGold.size(); i++) {
+				if(playerPosX == roomGold.get(i).getX()*16-500 && playerPosY == roomGold.get(i).getY()*16-600) {
+					roomGold.remove(i);	//Gold disappear
+					goldCounter++;
+				}
+			}
+			
+			for(int i=0; i<dungeonBotLocations.size(); i++) {
+				if(playerPosX == dungeonBotLocations.get(i).getX()*16-500 && playerPosY == dungeonBotLocations.get(i).getY()*16-600) {
+					died = true;	//Set flag value
+				}
+			}
 		}
 		
 		//Moving LEFT
 		if(input.isKeyPressed(Input.KEY_LEFT)) {
 			playerPosX -= 16f;
+			
+//v1.1 -- check collision of walls, gold and bot with the boundaries from the arrayList
+			
+			for(int i=0; i<dungeonWalls.size(); i++) {
+				if(playerPosX == dungeonWalls.get(i).getX()*16-500 && playerPosY == dungeonWalls.get(i).getY()*16-600) {
+					playerPosY +=16f;
+				}
+			}
+			
+			for(int i=0; i<roomGold.size(); i++) {
+				if(playerPosX == roomGold.get(i).getX()*16-500 && playerPosY == roomGold.get(i).getY()*16-600) {
+					roomGold.remove(i);	//Gold disappear
+					goldCounter++;
+				}
+			}
+			
+			for(int i=0; i<dungeonBotLocations.size(); i++) {
+				if(playerPosX == dungeonBotLocations.get(i).getX()*16-500 && playerPosY == dungeonBotLocations.get(i).getY()*16-600) {
+					died = true;	//Set flag value
+				}
+			}
 		}
 		
 		//Moving RIGHT
 		if(input.isKeyPressed(Input.KEY_RIGHT)) {
 			playerPosX += 16f;
+			
+//v1.1 -- check collision of walls, gold and bot with the boundaries from the arrayList
+			
+			for(int i=0; i<dungeonWalls.size(); i++) {
+				if(playerPosX == dungeonWalls.get(i).getX()*16-500 && playerPosY == dungeonWalls.get(i).getY()*16-600) {
+					playerPosY +=16f;
+				}
+			}
+			
+			for(int i=0; i<roomGold.size(); i++) {
+				if(playerPosX == roomGold.get(i).getX()*16-500 && playerPosY == roomGold.get(i).getY()*16-600) {
+					roomGold.remove(i);	//Gold disappear
+					goldCounter++;
+				}
+			}
+			
+			for(int i=0; i<dungeonBotLocations.size(); i++) {
+				if(playerPosX == dungeonBotLocations.get(i).getX()*16-500 && playerPosY == dungeonBotLocations.get(i).getY()*16-600) {
+					died = true;	//Set flag value
+				}
+			}
 		}
 		
 		if(input.isKeyPressed(Input.KEY_ESCAPE)) {
