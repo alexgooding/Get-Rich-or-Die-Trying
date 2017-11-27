@@ -23,7 +23,7 @@ public class Map extends BasicGameState {
 	//v1.1
 	private int goldCounter;	//For counting the total gold the player collected
 	private boolean died;		//died = true when player hit the bot
-
+	private int stepCounter;      //v1.3 Counts the number of steps the player takes.
 	
 	//Getting Boundaries
 	private ArrayList<Location> dungeonWalls = new ArrayList<Location>();
@@ -124,6 +124,9 @@ public class Map extends BasicGameState {
 				
 				//v1.1 -- Display of how much gold the player collected
 				graphics.drawString("Gold Collected: " + goldCounter, 500, 500);
+				
+				//v1.3 -- Display of how many steps the player has taken
+				graphics.drawString("Steps Taken: " + stepCounter, 500, 520);
 			}
 		}
 		else {
@@ -232,12 +235,14 @@ public class Map extends BasicGameState {
 		
 		//v1.3
 		if(playerMoveFlag == true) {
+			stepCounter += 1; //v1.3 Add step to count.
 			for(int i=0; i<rooms.size(); i++) {
 				rooms.get(i).moveBotRandomly();
 			}
 		}
-		for(int i=0; i<dungeonBotLocations.size(); i++) {
-			if(playerPosX == dungeonBotLocations.get(i).getX()*16-500 && playerPosY == dungeonBotLocations.get(i).getY()*16-600) {
+		for(int i=0; i<dungeonBotLocations.size(); i++) {                                                                            
+			//v1.3 Added extra condition to stop player dying upon spawn.
+			if(playerPosX == dungeonBotLocations.get(i).getX()*16-500 && playerPosY == dungeonBotLocations.get(i).getY()*16-600 && stepCounter != 0) {
 				died = true;	//Set flag value
 			}
 		}
