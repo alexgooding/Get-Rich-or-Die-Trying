@@ -153,16 +153,16 @@ public class Dungeon{
 			Location newLocation = new Location();
 			switch(initialRoom.getDoorLocations().get(i).getDirection()){
 				case 's':
-					newLocation = new Location(initialRoom.getRoomLocation().getX(), initialRoom.getRoomLocation().getY()-initialRoom.getRoomSize(), 1);
+					newLocation = new Location(initialRoom.getRoomLocation().getX(), initialRoom.getRoomLocation().getY()-initialRoom.getRoomSize(), roomCounter);
 					break;
 				case 'e':
-					newLocation = new Location(initialRoom.getRoomLocation().getX()+initialRoom.getRoomSize(), initialRoom.getRoomLocation().getY(), 1);
+					newLocation = new Location(initialRoom.getRoomLocation().getX()+initialRoom.getRoomSize(), initialRoom.getRoomLocation().getY(), roomCounter);
 					break;
 				case 'n':
-					newLocation = new Location(initialRoom.getRoomLocation().getX(), initialRoom.getRoomLocation().getY()+initialRoom.getRoomSize(), 1);
+					newLocation = new Location(initialRoom.getRoomLocation().getX(), initialRoom.getRoomLocation().getY()+initialRoom.getRoomSize(), roomCounter);
 					break;	
 				case 'w':
-					newLocation = new Location(initialRoom.getRoomLocation().getX()-initialRoom.getRoomSize(), initialRoom.getRoomLocation().getY(), 1);
+					newLocation = new Location(initialRoom.getRoomLocation().getX()-initialRoom.getRoomSize(), initialRoom.getRoomLocation().getY(), roomCounter);
 					break;
 			}
 			boolean repeatFlag = false; //Flags whether the room already exists in the rooms list.
