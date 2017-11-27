@@ -16,6 +16,8 @@ public class Dungeon{
 	private ArrayList<Room> rooms = new ArrayList<Room>();
 	private ArrayList<Location> dungeonWalls = new ArrayList<Location>();
 	private ArrayList<Location> dungeonDoorLocations = new ArrayList<Location>();
+	private ArrayList<Location> dungeonGoldLocations = new ArrayList<Location>();	//v1.1
+	private ArrayList<Location> dungeonBotLocations = new ArrayList<Location>();	//v1.1
 	private int roomCounter = 1;
 
 	// =========================
@@ -58,6 +60,8 @@ public class Dungeon{
 		rooms.add(firstRoom);
 		generateRooms(firstRoom);
 		storeDungeonWalls();
+		storeDungeonGold(); //v1.1
+		storeDungeonBot(); //v1.1
 	}
 
 
@@ -110,6 +114,28 @@ public class Dungeon{
 	public ArrayList<Location> getDungeonDoorLocations(){
 		return dungeonDoorLocations;
 	}	
+
+	//v1.1
+	/**
+	* Accessor for dungeonGoldLocations. 
+	*
+	* @param  none.
+	* @return The list of the locations of all the gold in the dungeon.
+	*/  
+	public ArrayList<Location> getDungeonGoldLocations(){
+		return dungeonGoldLocations;
+	}	
+	
+	//v1.1
+	/**
+	* Accessor for dungeonBotLocations. 
+	*
+	* @param  none.
+	* @return The list of the locations of all the bot in the dungeon.
+	*/
+	public ArrayList<Location> getDungeonBotLocations(){
+		return dungeonBotLocations;
+	}
 
 	// =========================
 	// Additional Methods
@@ -195,6 +221,34 @@ public class Dungeon{
 		    	}
 		  	}
 		}
+	}
+
+	//v1.1
+	/**
+	* Stores the boundaries of the golds.
+	* 
+	*
+	* @return void.
+	*/  
+	public void storeDungeonGold(){
+		for(int i=0; i<getRooms().size(); i++){
+		  	for(int j=0; j<getRooms().get(i).getRoomGold().size(); j++){
+		    	dungeonGoldLocations.add(getRooms().get(i).getRoomGold().get(j).getItemLocation());
+		  	}
+		}
+	}
+	
+	//v1.1
+	/**
+	* Stores the boundaries of the bots.
+	* 
+	*
+	* @return void.
+	*/  
+	public void storeDungeonBot(){
+		for(int i=0; i<getRooms().size(); i++){
+		    	dungeonBotLocations.add(getRooms().get(i).getRoomBotLocation());
+		}	
 	}
 }
 
