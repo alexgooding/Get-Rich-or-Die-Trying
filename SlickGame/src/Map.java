@@ -1,3 +1,5 @@
+import java.awt.Font;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.newdawn.slick.Animation;
@@ -6,8 +8,11 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.util.ResourceLoader;
 
 //version v1.0: Ray: Initial Create
 //version v1.1: Ray: Add collision logic with walls, gold and bot. 
@@ -41,12 +46,11 @@ public class Map extends BasicGameState {
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 		// Loading images
-		tiles = new Image("res/test.png");
-		door = new Image("res/test2.png");
-		wall = new Image("res/test3.png");
+		door = new Image("res/door.png");
+		wall = new Image("res/wall.png");
 		player = new Image("res/player.png");
-		gold = new Image("res/coin.gif");
-		bot = new Image("res/bot.png");
+		gold = new Image("res/gold.png");
+		bot = new Image("res/ghost.png");
 		
 		// Create Dungeon
 		Dungeon testDungeon = new Dungeon(30, 1);
@@ -129,7 +133,22 @@ public class Map extends BasicGameState {
 		}
 		else {
 			//v1.1 -- if died then do the following...
-			graphics.drawString("YOU DIED " , 400, 300);
+			try {
+				// Set font for game ended
+				InputStream dungeonFont	= ResourceLoader.getResourceAsStream("res/Dungeon.ttf");
+				Font awFont = Font.createFont(Font.TRUETYPE_FONT, dungeonFont);
+				awFont = awFont.deriveFont(32f);
+				boolean antiAlias = true;
+				TrueTypeFont textFont = new TrueTypeFont(awFont, antiAlias);
+				textFont.drawString((Main.halfWidth - textFont.getWidth("YOU DIED!") / 2 ), Main.halfHeight - 50, "YOU DIED!");
+				textFont.drawString((Main.halfWidth - textFont.getWidth("(Press ENTER to restart)") / 2 ), Main.halfHeight + 50, "(Press ENTER to restart)");
+				if(gc.getInput().isKeyPressed(Input.KEY_ENTER)) {
+					this.init(gc, sbg);
+				}
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

@@ -6,8 +6,11 @@ import org.newdawn.slick.state.*;
 //version v1.0: Ray: Initial Create
 
 public class Main extends StateBasedGame{
-	
-	public static final String gameName = "Dungeon Game";
+	public static final int winWidth = 1080;
+    public static final int winHeight = 720;
+    public static final int halfWidth = winWidth / 2;
+    public static final int halfHeight = winHeight / 2;
+    public static final String gameName = "Dungeon Game";
 	public static final int startMenu = 0;	//Game state level (Like page number)
 	public static final int map = 1;
 	
@@ -29,7 +32,7 @@ public class Main extends StateBasedGame{
 		AppGameContainer appGame;
 		try {
 			appGame = new AppGameContainer(new Main(gameName));
-			appGame.setDisplayMode(800, 600, false);	//Windows resolution
+			appGame.setDisplayMode(winWidth, winHeight, false);	//Windows resolution
 			appGame.start();
 		}catch(SlickException e) {
 			e.printStackTrace();
