@@ -28,7 +28,7 @@ public class Room{
 	* Default constructor - this initialises x, y and roomNumber to the point (0, 0, 1).
 	*/
 	public Room(){
-		Location defaultLocation = new Location(50, 50 ,1);
+		Location defaultLocation = new Location(50, 50 ,0);
 		setRoom(4, defaultLocation, 4, 1, true);
 	}
 
