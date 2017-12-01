@@ -2,6 +2,9 @@ import java.util.*;
 import java.util.Random;
 import java.util.ArrayList;
 
+
+//version 1.1: Ray: Add Location arrayList for gold and bot
+
 public class Dungeon{
 
 	/*
@@ -16,6 +19,8 @@ public class Dungeon{
 	private ArrayList<Room> rooms = new ArrayList<Room>();
 	private ArrayList<Location> dungeonWalls = new ArrayList<Location>();
 	private ArrayList<Location> dungeonDoorLocations = new ArrayList<Location>();
+	private ArrayList<Location> dungeonGoldLocations = new ArrayList<Location>();	//v1.1
+	private ArrayList<Location> dungeonBotLocations = new ArrayList<Location>();	//v1.1
 	private int roomCounter = 1;
 
 	// =========================
@@ -58,6 +63,8 @@ public class Dungeon{
 		rooms.add(firstRoom);
 		generateRooms(firstRoom);
 		storeDungeonWalls();
+		storeDungeonGold();
+		storeDungeonBot();
 	}
 
 
@@ -110,6 +117,28 @@ public class Dungeon{
 	public ArrayList<Location> getDungeonDoorLocations(){
 		return dungeonDoorLocations;
 	}	
+	
+	//v1.1
+	/**
+	* Accessor for dungeonGoldLocations. 
+	*
+	* @param  none.
+	* @return The list of the locations of all the gold in the dungeon.
+	*/  
+	public ArrayList<Location> getDungeonGoldLocations(){
+		return dungeonGoldLocations;
+	}	
+	
+	//v1.1
+	/**
+	* Accessor for dungeonBotLocations. 
+	*
+	* @param  none.
+	* @return The list of the locations of all the bot in the dungeon.
+	*/
+	public ArrayList<Location> getDungeonBotLocations(){
+		return dungeonBotLocations;
+	}
 
 	// =========================
 	// Additional Methods
@@ -127,16 +156,16 @@ public class Dungeon{
 			Location newLocation = new Location();
 			switch(initialRoom.getDoorLocations().get(i).getDirection()){
 				case 's':
-					newLocation = new Location(initialRoom.getRoomLocation().getX(), initialRoom.getRoomLocation().getY()-initialRoom.getRoomSize(), roomCounter);
+					newLocation = new Location(initialRoom.getRoomLocation().getX(), initialRoom.getRoomLocation().getY()-initialRoom.getRoomSize(), 1);
 					break;
 				case 'e':
-					newLocation = new Location(initialRoom.getRoomLocation().getX()+initialRoom.getRoomSize(), initialRoom.getRoomLocation().getY(), roomCounter);
+					newLocation = new Location(initialRoom.getRoomLocation().getX()+initialRoom.getRoomSize(), initialRoom.getRoomLocation().getY(), 1);
 					break;
 				case 'n':
-					newLocation = new Location(initialRoom.getRoomLocation().getX(), initialRoom.getRoomLocation().getY()+initialRoom.getRoomSize(), roomCounter);
+					newLocation = new Location(initialRoom.getRoomLocation().getX(), initialRoom.getRoomLocation().getY()+initialRoom.getRoomSize(), 1);
 					break;	
 				case 'w':
-					newLocation = new Location(initialRoom.getRoomLocation().getX()-initialRoom.getRoomSize(), initialRoom.getRoomLocation().getY(), roomCounter);
+					newLocation = new Location(initialRoom.getRoomLocation().getX()-initialRoom.getRoomSize(), initialRoom.getRoomLocation().getY(), 1);
 					break;
 			}
 			boolean repeatFlag = false; //Flags whether the room already exists in the rooms list.
@@ -149,7 +178,7 @@ public class Dungeon{
 			if(repeatFlag==false){
 				Random rand = new Random();
 				//int randomDoorNumber = rand.nextInt(4);
-				double nextDoorNumber = rand.nextGaussian()*1+1.5;
+				double nextDoorNumber = rand.nextGaussian()*0.4+1.5;
 				int randomDoorNumber; 
 				randomDoorNumber = (int) nextDoorNumber;
 				if(randomDoorNumber>4){
@@ -196,6 +225,32 @@ public class Dungeon{
 		  	}
 		}
 	}
+	
+	//v1.1
+	/**
+	* Stores the boundaries of the golds.
+	* 
+	*
+	* @return void.
+	*/  
+	public void storeDungeonGold(){
+		for(int i=0; i<getRooms().size(); i++){
+		  	for(int j=0; j<getRooms().get(i).getRoomGold().size(); j++){
+		    	dungeonGoldLocations.add(getRooms().get(i).getRoomGold().get(j).getItemLocation());
+		  	}
+		}
+	}
+	
+	//v1.1
+		/**
+		* Stores the boundaries of the bots.
+		* 
+		*
+		* @return void.
+		*/  
+	public void storeDungeonBot(){
+		for(int i=0; i<getRooms().size(); i++){
+		    	dungeonBotLocations.add(getRooms().get(i).getRoomBotLocation());
+		}	
+	}
 }
-
-
