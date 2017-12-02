@@ -1,6 +1,7 @@
 import java.awt.Font;
 import java.io.InputStream;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
@@ -58,11 +59,15 @@ public class MainMenu extends BasicGameState {
 				sbg.enterState(1);
 			}
 		}
-		// If Quit button is pressed, the window is closed.
+		// If Quit button is pressed, the window is closed
 		if((mousePosX > buttonCenter && mousePosX < buttonCenter + 300) && (mousePosY > Main.halfHeight + 170 && mousePosY < 650)) {
 			if(Mouse.isButtonDown(0)) {
 				System.exit(0);
 			}
+		}
+		// Enters the game if Enter key is pressed
+		if (Keyboard.isKeyDown(Input.KEY_ENTER)) {
+			sbg.enterState(1);
 		}
 	}
 	
