@@ -71,8 +71,10 @@ public class Map extends BasicGameState {
 		playerPosX = dungeonWalls.get(0).getX()*16-500+16;
 		playerPosY = dungeonWalls.get(0).getY()*16-600+16;
 		
+		stepsToGold = 0;
 		stepCounter = 0; //v1.4 - bugFix, resets stepCounter upon new level
 		goldCounter = 0;
+		
 		died = false;
 	}
 
@@ -193,7 +195,7 @@ public class Map extends BasicGameState {
 				if(playerPosX == roomGold.get(i).getX()*16-500 && playerPosY == roomGold.get(i).getY()*16-600) {
 					roomGold.remove(i);	//Gold disappear
 					goldCounter++;
-					playerScore = (playerScore + (1000 - stepsToGold)); //v1.4 -- calculates the amount of steps taken for a gold piece
+					playerScore = (playerScore + (1000 - (stepsToGold*50))); //v1.4 -- calculates the amount of steps taken for a gold piece
 					stepsToGold = 0; //resets the steps to 0 
 				}
 			}
@@ -217,7 +219,7 @@ public class Map extends BasicGameState {
 				if(playerPosX == roomGold.get(i).getX()*16-500 && playerPosY == roomGold.get(i).getY()*16-600) {
 					roomGold.remove(i);	//Gold disappear
 					goldCounter++;
-					playerScore = (playerScore + (1000 - stepsToGold)); //v1.4 -- calculates the amount of steps taken for a gold piece
+					playerScore = (playerScore + (1000 - (stepsToGold*50))); //v1.4 -- calculates the amount of steps taken for a gold piece
 					stepsToGold = 0; //resets the steps to 0 
 				}
 			}
@@ -242,7 +244,7 @@ public class Map extends BasicGameState {
 				if(playerPosX == roomGold.get(i).getX()*16-500 && playerPosY == roomGold.get(i).getY()*16-600) {
 					roomGold.remove(i);	//Gold disappear
 					goldCounter++;
-					playerScore = (playerScore + (1000 - stepsToGold)); //v1.4 -- calculates the amount of steps taken for a gold piece
+					playerScore = (playerScore + (1000 - (stepsToGold*100))); //v1.4 -- calculates the amount of steps taken for a gold piece
 					stepsToGold = 0; //resets the steps to 0 
 				}
 			}
@@ -267,7 +269,7 @@ public class Map extends BasicGameState {
 				if(playerPosX == roomGold.get(i).getX()*16-500 && playerPosY == roomGold.get(i).getY()*16-600) {
 					roomGold.remove(i);	//Gold disappear
 					goldCounter++;
-					playerScore = (playerScore + (1000 - stepsToGold)); //v1.4 -- calculates the amount of steps taken for a gold piece
+					playerScore = (playerScore + (1000 - (stepsToGold*50))); //v1.4 -- calculates the amount of steps taken for a gold piece
 					stepsToGold = 0; //resets the steps to 0 
 				}
 			}
