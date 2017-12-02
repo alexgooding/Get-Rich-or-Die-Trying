@@ -18,6 +18,7 @@ import org.newdawn.slick.util.ResourceLoader;
 //version v1.1: Ray: Add collision logic with walls, gold and bot. 
 //version v1.2: Ray: Fixed bug for moving towards wall
 //version v1.3: Alex and Jess: Added random bot movement for each time player successfully moves. 
+//version v1.4: David: Added a way of measuring player score, current level and a minor bug fix.
 
 public class Map extends BasicGameState {
 
@@ -27,6 +28,9 @@ public class Map extends BasicGameState {
 	private int goldCounter;	//For counting the total gold the player collected
 	private boolean died;		//died = true when player hit the bot
 	private int stepCounter;      //v1.3 Counts the number of steps the player takes.
+	private int stepsToGold; 		//v1.4 Tracks the amount of steps it takes for a player to get a single piece of gold
+	private int playerScore;			//v1.4 Tracks the players score
+	private int playerCurrentLevel = 1; 	//v1.4 Shows current player level (initial level is 1)
 	
 	//Getting Boundaries
 	private ArrayList<Location> dungeonWalls = new ArrayList<Location>();
@@ -67,6 +71,7 @@ public class Map extends BasicGameState {
 		playerPosX = dungeonWalls.get(0).getX()*16-500+16;
 		playerPosY = dungeonWalls.get(0).getY()*16-600+16;
 		
+		stepCounter = 0; //v1.4 - bugFix, resets stepCounter upon new level
 		goldCounter = 0;
 		died = false;
 	}
@@ -80,6 +85,8 @@ public class Map extends BasicGameState {
 			// v1.1 -- if player collected 5 golds then move to next level
 			if(goldCounter == 5) {
 				this.init(gc, sbg);	//Re-initiate the game
+				playerCurrentLevel = playerCurrentLevel + 1; //v1.4 -- new level is added
+				
 			}
 			else {
 
@@ -129,6 +136,12 @@ public class Map extends BasicGameState {
 				
 				//v1.3 -- Display of how many steps the player has taken
 				graphics.drawString("Steps Taken: " + stepCounter, 500, 520);
+				
+				//v1.4 -- Display of player score
+				graphics.drawString("Player Score: " + playerScore, 500, 540);
+				
+				//v1.4 -- Display of player level
+				graphics.drawString("Current level is: " + playerCurrentLevel, 500, 560);
 			}
 		}
 		else {
@@ -144,6 +157,8 @@ public class Map extends BasicGameState {
 				textFont.drawString((Main.halfWidth - textFont.getWidth("(Press ENTER to restart)") / 2 ), Main.halfHeight + 50, "(Press ENTER to restart)");
 				if(gc.getInput().isKeyPressed(Input.KEY_ENTER)) {
 					this.init(gc, sbg);
+					playerScore = 0; //v1.4 -- resets the player score upon death
+					playerCurrentLevel = 1; //v1.4 -- resets the players current level upon death
 				}
 			}
 			catch (Exception e) {
@@ -178,6 +193,8 @@ public class Map extends BasicGameState {
 				if(playerPosX == roomGold.get(i).getX()*16-500 && playerPosY == roomGold.get(i).getY()*16-600) {
 					roomGold.remove(i);	//Gold disappear
 					goldCounter++;
+					playerScore = (playerScore + (1000 - stepsToGold)); //v1.4 -- calculates the amount of steps taken for a gold piece
+					stepsToGold = 0; //resets the steps to 0 
 				}
 			}
 			
@@ -200,6 +217,8 @@ public class Map extends BasicGameState {
 				if(playerPosX == roomGold.get(i).getX()*16-500 && playerPosY == roomGold.get(i).getY()*16-600) {
 					roomGold.remove(i);	//Gold disappear
 					goldCounter++;
+					playerScore = (playerScore + (1000 - stepsToGold)); //v1.4 -- calculates the amount of steps taken for a gold piece
+					stepsToGold = 0; //resets the steps to 0 
 				}
 			}
 			
@@ -223,6 +242,8 @@ public class Map extends BasicGameState {
 				if(playerPosX == roomGold.get(i).getX()*16-500 && playerPosY == roomGold.get(i).getY()*16-600) {
 					roomGold.remove(i);	//Gold disappear
 					goldCounter++;
+					playerScore = (playerScore + (1000 - stepsToGold)); //v1.4 -- calculates the amount of steps taken for a gold piece
+					stepsToGold = 0; //resets the steps to 0 
 				}
 			}
 			
@@ -246,6 +267,8 @@ public class Map extends BasicGameState {
 				if(playerPosX == roomGold.get(i).getX()*16-500 && playerPosY == roomGold.get(i).getY()*16-600) {
 					roomGold.remove(i);	//Gold disappear
 					goldCounter++;
+					playerScore = (playerScore + (1000 - stepsToGold)); //v1.4 -- calculates the amount of steps taken for a gold piece
+					stepsToGold = 0; //resets the steps to 0 
 				}
 			}
 		}
@@ -253,6 +276,8 @@ public class Map extends BasicGameState {
 		//v1.3
 		if(playerMoveFlag == true) {
 			stepCounter += 1; //v1.3 Add step to count.
+			stepsToGold ++; //v1.4 tracks the amount of steps it takes to get a gold piece
+									
 			for(int i=0; i<rooms.size(); i++) {
 				rooms.get(i).moveBotRandomly();
 			}
@@ -267,7 +292,7 @@ public class Map extends BasicGameState {
 			System.exit(0);
 		}
 		
-	}
+	}	
 
 	@Override
 	public int getID() {
