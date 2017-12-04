@@ -29,7 +29,6 @@ public class MainMenu extends BasicGameState {
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-		g.translate(-520,-320);
 		// Set title on the screen
 		float titleWidth = titleFont.getWidth(Main.gameName);
 		titleFont.drawString((Main.winWidth - titleWidth) / 2, 200, Main.gameName, Color.white);
@@ -40,7 +39,6 @@ public class MainMenu extends BasicGameState {
 		float buttonCenter = (Main.winWidth - 300) / 2;
 		startGameButton.draw(buttonCenter, Main.halfHeight + 20);
 		quitButton.draw(buttonCenter, Main.halfHeight + 170);
-		g.resetTransform();
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
