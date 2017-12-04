@@ -4,18 +4,26 @@ import java.io.InputStream;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
 import org.newdawn.slick.util.ResourceLoader;
+import org.newdawn.slick.Music;	//v1.1
 
 //version v1.0: Ray: Initial Create
-
+//version v1.1: Ray and David: Added Music
 public class MainMenu extends BasicGameState {
 	// Font variables
 	private TrueTypeFont titleFont;
 	private boolean antiAlias = true;
 	
+	Music music;	//v1.1
+	
 	public MainMenu(int state) {
 		
 	}
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		
+		//v1.1
+		music = new Music("res/music.wav");
+		music.loop();
+		
 		try {
 			// Set font of game title
 			InputStream dungeonFont	= ResourceLoader.getResourceAsStream("res/Dungeon.ttf");
@@ -29,7 +37,7 @@ public class MainMenu extends BasicGameState {
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-		g.translate(-520,-320);
+		//g.translate(-520,-320);
 		// Set title on the screen
 		float titleWidth = titleFont.getWidth(Main.gameName);
 		titleFont.drawString((Main.winWidth - titleWidth) / 2, 200, Main.gameName, Color.white);
@@ -40,7 +48,7 @@ public class MainMenu extends BasicGameState {
 		float buttonCenter = (Main.winWidth - 300) / 2;
 		startGameButton.draw(buttonCenter, Main.halfHeight + 20);
 		quitButton.draw(buttonCenter, Main.halfHeight + 170);
-		g.resetTransform();
+		//g.resetTransform();
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
@@ -65,6 +73,7 @@ public class MainMenu extends BasicGameState {
 		}
 		// Enters the game if Enter key is pressed
 		if (input.isKeyDown(Input.KEY_ENTER)) {
+			input.clearKeyPressedRecord();
 			sbg.enterState(1);
 		}
 	}
