@@ -1,17 +1,22 @@
 import java.io.*;
+import java.util.ArrayList;
 
 //v1.5 used in leaderboard function - read/write works but is not implemented with program yet
 
 public class readFile {
-    public static void main(String [] args) {
+	
+	public void readFile() {
+		
+	}
+	
+    public static ArrayList<Integer> read(String fileName) {
 
         // The file containing the leaderboard information
-        String fileName = "leaderboard.txt";
+        //String fileName = "leaderboard.txt";
 
         // This will reference one line at a time
         String line = null;
-        
-        
+        ArrayList<Integer> leaderboardScore = new ArrayList<Integer>();
 
         try {
         	
@@ -21,8 +26,7 @@ public class readFile {
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             while((line = bufferedReader.readLine()) != null) {
-            	System.out.print(line);
-                
+            	leaderboardScore.add(Integer.parseInt(line));
             }   
 
             // Close files upon reading
@@ -38,5 +42,6 @@ public class readFile {
             System.out.println("Error reading file '"  + fileName + "'");                  
            
         }
+        return leaderboardScore;
     }
 }

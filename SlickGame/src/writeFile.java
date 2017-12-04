@@ -4,17 +4,10 @@ import java.io.*;
 
 public class writeFile {
 	 
-	public static void main (String [] args) 
+	public static void write (String fileName, int highestScore, int secondScore, int thirdScore) 
 	{
 		//sets the filename
-		String fileName = "leaderboard.txt";
-		
-		//gives test data to check 
-		int test1 = 0;
-		int test2 = 3;
-		int test3 = 1;
-		
-		
+
 		try {
 			
 			FileWriter fileWriter = new FileWriter(fileName);
@@ -23,11 +16,11 @@ public class writeFile {
 			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 			
 			//writes to file
-			bufferedWriter.write(String.valueOf(test1));
+			bufferedWriter.write(String.valueOf(highestScore));
 			bufferedWriter.newLine();
-			bufferedWriter.write(String.valueOf(test2));
+			bufferedWriter.write(String.valueOf(secondScore));
 			bufferedWriter.newLine();
-			bufferedWriter.write(String.valueOf(test3));
+			bufferedWriter.write(String.valueOf(thirdScore));
 			bufferedWriter.newLine();
 			bufferedWriter.close();
 					
