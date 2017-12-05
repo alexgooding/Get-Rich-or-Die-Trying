@@ -26,6 +26,7 @@ import org.newdawn.slick.util.ResourceLoader;
 //version v1.3: Alex and Jess: Added random bot movement for each time player successfully moves. 
 //version v1.4: David: Added a way of measuring player score, current level and a minor bug fix.
 //version v1.5: Ray and David: Added the leaderboard
+//version v1.6: Ray: Handle to bugs that will go off screen
 
 public class Map extends BasicGameState {
 
@@ -54,12 +55,27 @@ public class Map extends BasicGameState {
 	float playerPosX;
 	float playerPosY;
 	
+	// v1.6 declaring the offset variables for the render
+	int initialOffsetX;
+	int initialOffsetY;
+	
+	// v1.6 declaring the camera offset variables for the render 
+	int cameraOffsetX;
+	int cameraOffsetY;
 	
 	public Map(int map) {
 	}
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		
+		// v1.6 Ideal case should be initialOffsetX = 500, initialOffsetY = 500
+		initialOffsetX = 500;
+		initialOffsetY = 500;
+		
+		// v1.6 Can adjust it if you want -> bigger = shift more
+		cameraOffsetX = 100;
+		cameraOffsetY = 100;
 		
 		// Loading images
 		door = new Image("res/door.png");
@@ -80,13 +96,13 @@ public class Map extends BasicGameState {
 		rooms = testDungeon.getRooms(); //v1.3
 		
 		//v1.5	Read the leaderboad.txt file
-		leaderboardScore = readFile.read("leaderboard.txt");
+		leaderboardScore = leaderBoard.read("leaderboard.txt");
 		//v1.5	Sort the arraylist into descending order
 		Collections.sort(leaderboardScore, Collections.reverseOrder());
 
-		// Set Player position to the first room first wall created, ()=just want to make it visible, (*16)=image resolution, (+16)=next tile of the wall
-		playerPosX = dungeonWalls.get(0).getX()*16-500+16;
-		playerPosY = dungeonWalls.get(0).getY()*16-600+16;
+		//v1.6 Set Player position to the first room first wall created, initialOffsetX =make it to be with, (*16)=image resolution, (+16)=next tile of the wall
+		playerPosX = dungeonWalls.get(0).getX()*16- initialOffsetX+16;
+		playerPosY = dungeonWalls.get(0).getY()*16- initialOffsetY+16;
 		
 		stepsToGold = 0;
 		stepCounter = 0; //v1.4 - bugFix, resets stepCounter upon new level
@@ -96,6 +112,7 @@ public class Map extends BasicGameState {
 		
 		//v1.5 Flag initialization
 		addScoreFlag = false;
+		
 	}
 
 	@Override
@@ -108,42 +125,7 @@ public class Map extends BasicGameState {
 				
 			}
 			else {
-				//Render the dungeon
-				for(int i=0; i<dungeonWalls.size(); i++) {
-					float wallsPosX = dungeonWalls.get(i).getX()*16-500;
-					float wallsPosY = dungeonWalls.get(i).getY()*16-600;
-					//System.out.println("WallX: " + wallsPosX);
-					//System.out.println("WallY: " + wallsPosY);
-					wall.draw(wallsPosX, wallsPosY);
-				}
-
-				for(int i=0; i<dungeonDoorLocations.size(); i++) {
-					float doorPosX = dungeonDoorLocations.get(i).getX()*16-500;
-					float doorPosY = dungeonDoorLocations.get(i).getY()*16-600;
-					//System.out.println("DoorX: " + doorPosX);
-					//System.out.println("DoorY: " + doorPosY);
-					door.draw(doorPosX, doorPosY);
-				}
-
-				for(int i=0; i<roomGold.size(); i++) {
-					float goldPosX = roomGold.get(i).getX()*16-500;
-					float goldPosY = roomGold.get(i).getY()*16-600;
-					//System.out.println("GoldX: " + goldPosX);
-					//System.out.println("GoldY: " + goldPosY);
-					gold.draw(goldPosX, goldPosY);
-				}
-
-				for(int i=0; i<dungeonBotLocations.size(); i++) {
-					float botPosX = dungeonBotLocations.get(i).getX()*16-500;
-					float botPosY = dungeonBotLocations.get(i).getY()*16-600;
-					//System.out.println("BotX: " + botPosX);
-					//System.out.println("BotY: " + botPosY);
-					bot.draw(botPosX, botPosY);
-				}
-
-				// Draw the player
-				player.draw(playerPosX,playerPosY);
-
+				
 				//Track player position
 				graphics.drawString("X: " + playerPosX + " Y: " + playerPosY, 800, 20);
 				
@@ -158,6 +140,60 @@ public class Map extends BasicGameState {
 				
 				//v1.4 -- Display of player level
 				graphics.drawString("Current level is: " + playerCurrentLevel, 800, 560);
+				
+				//v1.6 -- Check if the player is out of the screen -> translate the graphics if yes
+				if(playerPosX < 32) {
+					graphics.translate(cameraOffsetX, 0);
+				}
+				
+				if(playerPosX > Main.winWidth - 32) {
+					graphics.translate(-cameraOffsetX, 0);
+				}
+				
+				if(playerPosY > Main.winHeight - 32) {
+					graphics.translate(0, -cameraOffsetY);
+				}
+				
+				if(playerPosY < 32) {
+					graphics.translate(0, cameraOffsetY);
+				}
+				
+				
+				//Render the dungeon
+				for(int i=0; i<dungeonWalls.size(); i++) {
+					float wallsPosX = dungeonWalls.get(i).getX()*16-initialOffsetX;
+					float wallsPosY = dungeonWalls.get(i).getY()*16- initialOffsetY;
+					//System.out.println("WallX: " + wallsPosX);
+					//System.out.println("WallY: " + wallsPosY);
+					wall.draw(wallsPosX, wallsPosY);
+				}
+
+				for(int i=0; i<dungeonDoorLocations.size(); i++) {
+					float doorPosX = dungeonDoorLocations.get(i).getX()*16-initialOffsetX;
+					float doorPosY = dungeonDoorLocations.get(i).getY()*16- initialOffsetY;
+					//System.out.println("DoorX: " + doorPosX);
+					//System.out.println("DoorY: " + doorPosY);
+					door.draw(doorPosX, doorPosY);
+				}
+
+				for(int i=0; i<roomGold.size(); i++) {
+					float goldPosX = roomGold.get(i).getX()*16- initialOffsetX;
+					float goldPosY = roomGold.get(i).getY()*16- initialOffsetY;
+					//System.out.println("GoldX: " + goldPosX);
+					//System.out.println("GoldY: " + goldPosY);
+					gold.draw(goldPosX, goldPosY);
+				}
+
+				for(int i=0; i<dungeonBotLocations.size(); i++) {
+					float botPosX = dungeonBotLocations.get(i).getX()*16-initialOffsetX;
+					float botPosY = dungeonBotLocations.get(i).getY()*16- initialOffsetY;
+					//System.out.println("BotX: " + botPosX);
+					//System.out.println("BotY: " + botPosY);
+					bot.draw(botPosX, botPosY);
+				}
+
+				// Draw the player
+				player.draw(playerPosX,playerPosY);				
 			}
 		
 		}
@@ -193,13 +229,13 @@ public class Map extends BasicGameState {
 					}		
 				}
 				// v1.5 Write the arraylist into the leaderboard.txt file, (filename, 1st score, 2nd score, 3rd score)
-				writeFile.write("leaderboard.txt", leaderboardScore.get(0), leaderboardScore.get(1), leaderboardScore.get(2));
+				leaderBoard.write("leaderboard.txt", leaderboardScore.get(0), leaderboardScore.get(1), leaderboardScore.get(2));
 				
 				// v1.5 set the flag to true to escape this loop
 				addScoreFlag = true;
 				
 				// v1.5 update the arraylist
-				leaderboardScore = readFile.read("leaderboard.txt");
+				leaderboardScore = leaderBoard.read("leaderboard.txt");
 				
 				//v1.1 -- if died then do the following...
 				try {
@@ -268,14 +304,14 @@ public class Map extends BasicGameState {
 				//v1.1 -- check collision of walls, gold and bot with the boundaries from the arrayList
 
 				for(int i=0; i<dungeonWalls.size(); i++) {
-					if(playerPosX == dungeonWalls.get(i).getX()*16-500 && playerPosY == dungeonWalls.get(i).getY()*16-600) {
+					if(playerPosX == dungeonWalls.get(i).getX()*16 - initialOffsetX && playerPosY == dungeonWalls.get(i).getY()*16- initialOffsetY) {
 						playerPosY +=16f;//v1.2
 						playerMoveFlag = false; //v1.3
 					}
 				}
 
 				for(int i=0; i<roomGold.size(); i++) {
-					if(playerPosX == roomGold.get(i).getX()*16-500 && playerPosY == roomGold.get(i).getY()*16-600) {
+					if(playerPosX == roomGold.get(i).getX()*16- initialOffsetX && playerPosY == roomGold.get(i).getY()*16- initialOffsetY) {
 						roomGold.remove(i);	//Gold disappear
 						goldCounter++;
 						playerScore = (playerScore + (1000 - (stepsToGold*50))); //v1.4 -- calculates the amount of steps taken for a gold piece
@@ -292,14 +328,14 @@ public class Map extends BasicGameState {
 				//v1.1 -- check collision of walls, gold and bot with the boundaries from the arrayList
 
 				for(int i=0; i<dungeonWalls.size(); i++) {
-					if(playerPosX == dungeonWalls.get(i).getX()*16-500 && playerPosY == dungeonWalls.get(i).getY()*16-600) {
+					if(playerPosX == dungeonWalls.get(i).getX()*16- initialOffsetX && playerPosY == dungeonWalls.get(i).getY()*16- initialOffsetY) {
 						playerPosY -=16f;	//v1.2
 						playerMoveFlag = false; //v1.3
 					}
 				}
 
 				for(int i=0; i<roomGold.size(); i++) {
-					if(playerPosX == roomGold.get(i).getX()*16-500 && playerPosY == roomGold.get(i).getY()*16-600) {
+					if(playerPosX == roomGold.get(i).getX()*16- initialOffsetX && playerPosY == roomGold.get(i).getY()*16- initialOffsetY) {
 						roomGold.remove(i);	//Gold disappear
 						goldCounter++;
 						playerScore = (playerScore + (1000 - (stepsToGold*50))); //v1.4 -- calculates the amount of steps taken for a gold piece
@@ -317,14 +353,14 @@ public class Map extends BasicGameState {
 				//v1.1 -- check collision of walls, gold and bot with the boundaries from the arrayList
 
 				for(int i=0; i<dungeonWalls.size(); i++) {
-					if(playerPosX == dungeonWalls.get(i).getX()*16-500 && playerPosY == dungeonWalls.get(i).getY()*16-600) {
+					if(playerPosX == dungeonWalls.get(i).getX()*16- initialOffsetX && playerPosY == dungeonWalls.get(i).getY()*16- initialOffsetY) {
 						playerPosX +=16f;	//v1.2
 						playerMoveFlag = false; //v1.3
 					}
 				}
 
 				for(int i=0; i<roomGold.size(); i++) {
-					if(playerPosX == roomGold.get(i).getX()*16-500 && playerPosY == roomGold.get(i).getY()*16-600) {
+					if(playerPosX == roomGold.get(i).getX()*16- initialOffsetX && playerPosY == roomGold.get(i).getY()*16- initialOffsetY) {
 						roomGold.remove(i);	//Gold disappear
 						goldCounter++;
 						playerScore = (playerScore + (1000 - (stepsToGold*100))); //v1.4 -- calculates the amount of steps taken for a gold piece
@@ -342,14 +378,14 @@ public class Map extends BasicGameState {
 				//v1.1 -- check collision of walls, gold and bot with the boundaries from the arrayList
 
 				for(int i=0; i<dungeonWalls.size(); i++) {
-					if(playerPosX == dungeonWalls.get(i).getX()*16-500 && playerPosY == dungeonWalls.get(i).getY()*16-600) {
+					if(playerPosX == dungeonWalls.get(i).getX()*16- initialOffsetX && playerPosY == dungeonWalls.get(i).getY()*16- initialOffsetY) {
 						playerPosX -=16f;	//v1.2
 						playerMoveFlag = false; //v1.3
 					}
 				}
 
 				for(int i=0; i<roomGold.size(); i++) {
-					if(playerPosX == roomGold.get(i).getX()*16-500 && playerPosY == roomGold.get(i).getY()*16-600) {
+					if(playerPosX == roomGold.get(i).getX()*16- initialOffsetX && playerPosY == roomGold.get(i).getY()*16- initialOffsetY) {
 						roomGold.remove(i);	//Gold disappear
 						goldCounter++;
 						playerScore = (playerScore + (1000 - (stepsToGold*50))); //v1.4 -- calculates the amount of steps taken for a gold piece
@@ -369,7 +405,7 @@ public class Map extends BasicGameState {
 			}
 			for(int i=0; i<dungeonBotLocations.size(); i++) {                                                                            
 				//v1.3 Added extra condition to stop player dying upon spawn.
-				if(playerPosX == dungeonBotLocations.get(i).getX()*16-500 && playerPosY == dungeonBotLocations.get(i).getY()*16-600 && stepCounter != 0) {
+				if(playerPosX == dungeonBotLocations.get(i).getX()*16- initialOffsetX && playerPosY == dungeonBotLocations.get(i).getY()*16- initialOffsetY && stepCounter != 0) {
 					died = true;	//Set flag value
 				}
 			}
