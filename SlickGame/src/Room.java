@@ -1,6 +1,7 @@
 import java.util.*;
 import java.util.Random;
 import java.util.ArrayList;
+import java.lang.*;
 
 public class Room{
 
@@ -60,8 +61,8 @@ public class Room{
 	* @param botFlag        - new flag for whether the bot is in the room or not.
 	*/
 	public void setRoom(int roomSize, Location roomLocation, int numberOfDoors, int roomDifficulty, boolean botFlag){
-	  	this.roomSize = roomSize;
-	  	this.roomLocation = roomLocation;
+  	this.roomSize = roomSize;
+  	this.roomLocation = roomLocation;
 		this.numberOfDoors = numberOfDoors;
 		this.roomDifficulty = roomDifficulty;
 		this.botFlag = botFlag;
@@ -86,7 +87,7 @@ public class Room{
 			goldAmount = 1;
 		}
 		else{
-			goldAmount = (roomSize-4)*6/roomDifficulty;
+			goldAmount = (int) Math.sqrt((roomSize-4)*6/roomDifficulty);
 		}
 		setRandomGold(goldAmount);
 
@@ -99,7 +100,7 @@ public class Room{
 		else{
 			roomBot = null;
 		}
-  	}
+  }
 
 	/**
 	* Accessor for the roomSize. 
@@ -237,6 +238,8 @@ public class Room{
 	* @return void.
 	*/
 	public void setRandomGold(int goldBound){
+		Random rand = new Random();
+		goldBound = Math.abs(rand.nextInt(goldBound)+goldBound-2);
 		for(int i=0; i<goldBound; i++){
 			Location newLocation = new Location();
 			newLocation = randomRoomLocation();

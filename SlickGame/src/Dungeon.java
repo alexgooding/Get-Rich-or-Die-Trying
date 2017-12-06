@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 
 //version 1.1: Ray: Add Location arrayList for gold and bot
+//version 1.2: Jess and Alex: Add Room locations array list and Door array list. Added a checkDoors function to 
+// 			   check if a door is redundant or not.
 
 public class Dungeon{
 
@@ -18,10 +20,12 @@ public class Dungeon{
 	private int dungeonDifficulty;
 	private ArrayList<Room> rooms = new ArrayList<Room>();
 	private ArrayList<Location> dungeonWalls = new ArrayList<Location>();
+	private ArrayList<Door> dungeonDoors = new ArrayList<Door>(); //v1.2
+	private ArrayList<Location> dungeonRoomLocations = new ArrayList<Location>(); //v1.2
 	private ArrayList<Location> dungeonDoorLocations = new ArrayList<Location>();
 	private ArrayList<Location> dungeonGoldLocations = new ArrayList<Location>();	//v1.1
 	private ArrayList<Location> dungeonBotLocations = new ArrayList<Location>();	//v1.1
-	private int roomCounter = 1;
+	private int roomCounter = 1;								
 
 	// =========================
 	// Constructors
@@ -62,6 +66,10 @@ public class Dungeon{
 		Room firstRoom = new Room();
 		rooms.add(firstRoom);
 		generateRooms(firstRoom);
+		storeDungeonDoors(); //v1.2
+		storeDungeonRoomLocations(); //v1.2
+		checkDoors(); //v1.2
+		storeDungeonDoorLocations(); //v1.2
 		storeDungeonWalls();
 		storeDungeonGold();
 		storeDungeonBot();
@@ -211,12 +219,6 @@ public class Dungeon{
 		    }
 		} 
 
-		for(int i=0; i<getRooms().size(); i++){
-		  	for(int j=0; j<getRooms().get(i).getDoorLocations().size(); j++){
-		    	dungeonDoorLocations.add(getRooms().get(i).getDoorLocations().get(j).getDoorLocation());
-		  	}
-		}
-
 		for(int i=0; i<dungeonWalls.size(); i++){
 		  	for(int j=0; j<dungeonDoorLocations.size(); j++){
 		    	if(dungeonWalls.get(i).equals(dungeonDoorLocations.get(j)) == true){
@@ -242,15 +244,127 @@ public class Dungeon{
 	}
 	
 	//v1.1
-		/**
-		* Stores the boundaries of the bots.
-		* 
-		*
-		* @return void.
-		*/  
+	/**
+	* Stores the boundaries of the bots.
+	* 
+	*
+	* @return void.
+	*/  
 	public void storeDungeonBot(){
 		for(int i=0; i<getRooms().size(); i++){
 		    	dungeonBotLocations.add(getRooms().get(i).getRoomBotLocation());
 		}	
 	}
+
+	//v1.2
+	/**
+	* Stores the dungeon doors.
+	* 
+	*
+	* @return void.
+	*/  
+	public void storeDungeonDoors(){
+		for(int i=0; i<getRooms().size(); i++){
+		  	for(int j=0; j<getRooms().get(i).getDoorLocations().size(); j++){
+		    	dungeonDoors.add(getRooms().get(i).getDoorLocations().get(j));
+		  	}
+		}
+		
+	}
+	//v1.2
+	/**
+	* Stores the the dungeon door locations.
+	* 
+	*
+	* @return void.
+	*/ 
+	public void storeDungeonDoorLocations(){
+		for(int i=0; i<dungeonDoors.size(); i++){
+		    dungeonDoorLocations.add(dungeonDoors.get(i).getDoorLocation());
+		}
+	}
+
+
+
+	//v1.2
+	/**
+	* Stores the dungeon room locations.
+	* 
+	*
+	* @return void.
+	*/ 
+	public void storeDungeonRoomLocations(){
+		for(int i=0; i<rooms.size(); i++){
+			dungeonRoomLocations.add(rooms.get(i).getRoomLocation());
+		}
+	}
+
+	//v1.2
+	/**
+	* Checks if the doors are redundant.
+	* 
+	*
+	* @return void.
+	*/  
+	public void checkDoors(){
+		boolean flag = false; //false if a door is redundant and true if the door is needed.
+		int n = dungeonDoors.size();
+		for(int i=0; i<n; i++){
+			switch(dungeonDoors.get(i).getDirection()){
+				//Check if a new room was created from this door.
+				case 's':
+					for(int j=0;j<dungeonRoomLocations.size();j++){
+						if(new Location(dungeonDoors.get(i).getDoorLocation().getX()-rooms.get(0).getRoomSize()/2, 
+								dungeonDoors.get(i).getDoorLocation().getY()-rooms.get(0).getRoomSize(),1).equals(dungeonRoomLocations.get(j))){
+							flag = true;
+							break;
+						} else {
+							flag = false;
+						}
+					}
+					break;		
+				case 'e':
+					for(int j=0;j<dungeonRoomLocations.size();j++){
+						if(new Location(dungeonDoors.get(i).getDoorLocation().getX(), 
+								dungeonDoors.get(i).getDoorLocation().getY()-rooms.get(0).getRoomSize()/2,1).equals(dungeonRoomLocations.get(j))){
+							flag = true;
+							break;
+						} else {
+							flag = false;
+						}
+					}
+					break;
+				case 'n':
+					for(int j=0;j<dungeonRoomLocations.size();j++){
+						if(new Location(dungeonDoors.get(i).getDoorLocation().getX()-rooms.get(0).getRoomSize()/2, 
+								dungeonDoors.get(i).getDoorLocation().getY(),1).equals(dungeonRoomLocations.get(j))){
+							flag = true;
+							break;
+						} else {
+							flag = false;
+						}
+					}
+					break;
+				case 'w':
+					for(int j=0;j<dungeonRoomLocations.size();j++){
+						if(new Location(dungeonDoors.get(i).getDoorLocation().getX()-rooms.get(0).getRoomSize(), 
+								dungeonDoors.get(i).getDoorLocation().getY()-rooms.get(0).getRoomSize()/2 ,1).equals(dungeonRoomLocations.get(j))){
+							flag = true;
+							break;
+						} else {
+							flag = false;
+						}
+					}
+					break;				
+			}
+			//Remove redundant doors from the door arraylist.
+			if(flag == false){
+				dungeonDoors.remove(i);
+				n = n-1;
+				i = i-1;
+			}
+		}
+		
+	}
+	
 }
