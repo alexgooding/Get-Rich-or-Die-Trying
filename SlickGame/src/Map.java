@@ -27,10 +27,11 @@ import org.newdawn.slick.util.ResourceLoader;
 //version v1.5: Ray and David: Added the leaderboard
 //version v1.6: Ray: Handle to bugs that will go off screen
 //version v1.7: Kimberley: Added dancing mummy, adjusted leaderboad UI
+//version v1.8: Alex and Jess: Added a win condition with a gold representing the win location on the last level when gold requirement is met. Win screen is needed.
 
 public class Map extends BasicGameState {
 
-	Image tiles, door, wall, player, gold, bot, skeleton0, mummy0, mummy1;	//Images
+	Image tiles, door, wall, player, gold, bot, skeleton0, mummy0, mummy1, exit;	//Images
 	Animation dancingMummy;
 	Image[] mummies;
 	int[] duration;
@@ -46,6 +47,9 @@ public class Map extends BasicGameState {
 	
 	//v1.5	Added a flag to escape the loop in update
 	private boolean addScoreFlag;
+
+	//v1.8 Added win condition.
+	private static boolean win;		//win = true when player walks on win location. 
 	
 	//Getting Boundaries
 	private ArrayList<Location> dungeonWalls = new ArrayList<Location>();
@@ -53,6 +57,7 @@ public class Map extends BasicGameState {
 	private ArrayList<Location> roomGold = new ArrayList<Location>();
 	private ArrayList<Location> dungeonBotLocations = new ArrayList<Location>();
 	private ArrayList<Room> rooms = new ArrayList<Room>(); //v1.3
+	private Location exitLocation = new Location(); //v1.8
 	
 	// Tracking player position
 	float playerPosX;
@@ -86,6 +91,7 @@ public class Map extends BasicGameState {
 		player = new Image("res/player.png");
 		gold = new Image("res/gold.png");
 		bot = new Image("res/ghost.png");
+		exit = new Image("res/coin.gif"); //v1.8
 		
 		// v1.7 Animations
 		mummy0 = new Image("res/Mummy0.png");
@@ -121,6 +127,7 @@ public class Map extends BasicGameState {
 		goldCounter = 0;
 		
 		died = false;
+		win = false; //v1.8
 		
 		//v1.5 Flag initialization
 		addScoreFlag = false;
@@ -131,10 +138,10 @@ public class Map extends BasicGameState {
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics graphics) throws SlickException {
 		if(died == false) {
 			// v1.1 -- if player collected 5 golds then move to next level
-			if(goldCounter == 5) {
+			if(goldCounter == 1 && playerCurrentLevel<2) { //v1.8
 				this.init(gc, sbg);	//Re-initiate the game
 				playerCurrentLevel = playerCurrentLevel + 1; //v1.4 -- new level is added
-				
+
 			}
 			else {
 				
@@ -172,6 +179,15 @@ public class Map extends BasicGameState {
 				
 				
 				//Render the dungeon
+
+				//v1.8 -- Create an exit location in the middle of the final room.
+				if(goldCounter >= 1 && playerCurrentLevel==2) { 
+					exitLocation = new Location(rooms.get(rooms.size()-1).getRoomLocation().getX()+rooms.get(rooms.size()-1).getRoomSize()/2, rooms.get(rooms.size()-1).getRoomLocation().getY()+rooms.get(rooms.size()-1).getRoomSize()/2,rooms.get(rooms.size()-1).getRoomLocation().getRoomNumber());
+					float exitPosX = exitLocation.getX()*16-initialOffsetX;
+					float exitPosY = exitLocation.getY()*16-initialOffsetY;
+					exit.draw(exitPosX, exitPosY);
+				}
+
 				for(int i=0; i<dungeonWalls.size(); i++) {
 					float wallsPosX = dungeonWalls.get(i).getX()*16-initialOffsetX;
 					float wallsPosY = dungeonWalls.get(i).getY()*16- initialOffsetY;
@@ -425,6 +441,11 @@ public class Map extends BasicGameState {
 				for(int i=0; i<rooms.size(); i++) {
 					rooms.get(i).moveBotRandomly();
 				}
+			}
+
+			//v1.8 win condition made true.
+			if(goldCounter >= 1 && playerCurrentLevel==2 && playerPosX == exitLocation.getX()*16-initialOffsetX && playerPosY == exitLocation.getY()*16-initialOffsetY) {
+				win = true;
 			}
 			for(int i=0; i<dungeonBotLocations.size(); i++) {                                                                            
 				//v1.3 Added extra condition to stop player dying upon spawn.
