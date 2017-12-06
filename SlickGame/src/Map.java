@@ -16,7 +16,6 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.util.ResourceLoader;
 
 
@@ -27,10 +26,14 @@ import org.newdawn.slick.util.ResourceLoader;
 //version v1.4: David: Added a way of measuring player score, current level and a minor bug fix.
 //version v1.5: Ray and David: Added the leaderboard
 //version v1.6: Ray: Handle to bugs that will go off screen
+//version v1.7: Kimberley: Added dancing mummy, adjusted leaderboad UI
 
 public class Map extends BasicGameState {
 
-	Image tiles, door, wall, player, gold, bot;	//Images
+	Image tiles, door, wall, player, gold, bot, skeleton0, mummy0, mummy1;	//Images
+	Animation dancingMummy;
+	Image[] mummies;
+	int[] duration;
 
 	//v1.1
 	private int goldCounter;	//For counting the total gold the player collected
@@ -84,6 +87,15 @@ public class Map extends BasicGameState {
 		gold = new Image("res/gold.png");
 		bot = new Image("res/ghost.png");
 		
+		// v1.7 Animations
+		mummy0 = new Image("res/Mummy0.png");
+		mummy0.setFilter(mummy0.FILTER_NEAREST);
+		mummy1 = new Image("res/Mummy1.png");
+		mummy1.setFilter(mummy1.FILTER_NEAREST);
+		mummies = new Image[]{mummy0.getScaledCopy(2),mummy1.getScaledCopy(2)};
+		duration = new int[]{300,300};
+		dancingMummy = new Animation(mummies, duration,true);
+		dancingMummy.setPingPong(true);
 		
 		// Create Dungeon
 		Dungeon testDungeon = new Dungeon(30, 1);
@@ -245,8 +257,11 @@ public class Map extends BasicGameState {
 					awFont = awFont.deriveFont(32f);
 					boolean antiAlias = true;
 					TrueTypeFont textFont = new TrueTypeFont(awFont, antiAlias);
-					textFont.drawString((Main.halfWidth - textFont.getWidth("YOU DIED!") / 2 ), Main.halfHeight - 50, "YOU DIED!");
-					textFont.drawString((Main.halfWidth - textFont.getWidth("(Press ENTER to restart)") / 2 ), Main.halfHeight + 50, "(Press ENTER to restart)");
+					// graphics.drawString("New High Score! " + playerScore, Main.halfWidth - 100, 300);
+					textFont.drawString((Main.halfWidth - textFont.getWidth("YOU DIED!") / 2 ), 150, "YOU DIED!");
+					textFont.drawString((Main.halfWidth - textFont.getWidth("(Press ENTER to restart)") / 2 ), 200, "(Press ENTER to restart)");
+					// Animation
+					dancingMummy.draw(Main.halfWidth, 250);
 					if(gc.getInput().isKeyPressed(Input.KEY_ENTER)) {
 						this.init(gc, sbg);
 						playerScore = 0; //v1.4 -- resets the player score upon death
@@ -266,12 +281,20 @@ public class Map extends BasicGameState {
 					awFont = awFont.deriveFont(32f);
 					boolean antiAlias = true;
 					TrueTypeFont textFont = new TrueTypeFont(awFont, antiAlias);
-					textFont.drawString((Main.halfWidth - textFont.getWidth("YOU DIED!") / 2 ), Main.halfHeight - 50, "YOU DIED!");
-					textFont.drawString((Main.halfWidth - textFont.getWidth("(Press ENTER to restart)") / 2 ), Main.halfHeight + 50, "(Press ENTER to restart)");
-					graphics.drawString("LeaderBoard",0,50);
-					graphics.drawString("1st " + leaderboardScore.get(0),0,100);
-					graphics.drawString("2nd " + leaderboardScore.get(1),0,150);
-					graphics.drawString("3rd " + leaderboardScore.get(2),0,200);
+					textFont.drawString((Main.halfWidth - textFont.getWidth("YOU DIED!") / 2 ), 150, "YOU DIED!");
+					textFont.drawString((Main.halfWidth - textFont.getWidth("(Press ENTER to restart)") / 2 ), 200, "(Press ENTER to restart)");
+					
+					// v1.7 Animation
+					dancingMummy.draw(Main.halfWidth, 250);
+					
+					// v1.7 Leaderboard
+					graphics.drawString("Player Score: " + playerScore, Main.halfWidth - 100, 300);
+					// v1.7 Border
+					graphics.drawRect(Main.halfWidth - 100, 340, 200, 200);
+					textFont.drawString((Main.halfWidth - textFont.getWidth("Leaderboard") / 2 ), 350, "Leaderboard");
+					graphics.drawString("1st " + leaderboardScore.get(0), Main.halfWidth - 50, 400);
+					graphics.drawString("2nd " + leaderboardScore.get(1), Main.halfWidth - 50, 450);
+					graphics.drawString("3rd " + leaderboardScore.get(2), Main.halfWidth - 50, 500);
 					
 					if(gc.getInput().isKeyPressed(Input.KEY_ENTER)) {
 						this.init(gc, sbg);
