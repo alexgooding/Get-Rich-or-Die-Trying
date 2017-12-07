@@ -240,6 +240,9 @@ public class Room{
 	public void setRandomGold(int goldBound){
 		Random rand = new Random();
 		goldBound = Math.abs(rand.nextInt(goldBound)+goldBound-2);
+		if(goldBound==0) {
+			goldBound=1;
+		}
 		for(int i=0; i<goldBound; i++){
 			Location newLocation = new Location();
 			newLocation = randomRoomLocation();
@@ -254,10 +257,12 @@ public class Room{
 	/**
 	* Randomly moves the roomBot one tile taking into account the room boundaries.
 	*
+	* @param boundaryFlag - flags whether the bot should conform to the boundaries of its room.
+	* @param altBoundaries - The alternative boundaries the bot will conform to.
 	* @return void.
 	*/
-	public void moveBotRandomly(){
-		String s = "nesw";
+	public void moveBotRandomly(boolean boundaryFlag, ArrayList<Location> altBoundaries){
+		String s = "nesw ";
 		boolean moveSuccess;
 		int index;
 		do{
@@ -265,10 +270,15 @@ public class Room{
 			Random random = new Random();
     		index = random.nextInt(s.length());
     		for(int i=0; i<getRoomBoundaries().length; i++){
-    			if(updateLocation(getRoomBotLocation(), s.charAt(index)).equals(getRoomBoundaries()[i])){
+    			if(updateLocation(getRoomBotLocation(), s.charAt(index)).equals(getRoomBoundaries()[i]) && boundaryFlag==true){
     				moveSuccess = false;
     			}
     		}
+    		for(int i=0; i<altBoundaries.size(); i++){
+    			if(updateLocation(getRoomBotLocation(), s.charAt(index)).equals(altBoundaries.get(i)) && boundaryFlag==false){
+    				moveSuccess = false;
+    			}
+    		}    		
 		}while(moveSuccess == false);
 		roomBot.updateBotLocation(s.charAt(index));
 	}
@@ -287,6 +297,7 @@ public class Room{
 			case 'e': newLocation.setX(l.getX()+1); break;
 			case 's': newLocation.setY(l.getY()-1); break;
 			case 'w': newLocation.setX(l.getX()-1); break;
+			default : break;
 		}
 		return newLocation;
 	}

@@ -28,6 +28,7 @@ import org.newdawn.slick.util.ResourceLoader;
 //version v1.6: Ray: Handle to bugs that will go off screen
 //version v1.7: Kimberley: Added dancing mummy, adjusted leaderboad UI
 //version v1.8: Alex and Jess: Added a win condition with a gold representing the win location on the last level when gold requirement is met. Win screen is needed.
+//version v1.9: Alex: Bots will move through doors once the gold condition is met on the final level. Added GOLDREQUIREMENT AND LEVELREQUIREMENT constants for ease of testing.
 
 public class Map extends BasicGameState {
 
@@ -50,6 +51,11 @@ public class Map extends BasicGameState {
 
 	//v1.8 Added win condition.
 	private static boolean win;		//win = true when player walks on win location. 
+	
+	//v1.9 Added a flag to tell whether the bots should keep to their boundaries or not and fixed gold requirements and level requirements.
+	private static boolean boundaryFlag;
+	private int GOLDREQUIREMENT;
+	private int LEVELREQUIREMENT;
 	
 	//Getting Boundaries
 	private ArrayList<Location> dungeonWalls = new ArrayList<Location>();
@@ -76,6 +82,10 @@ public class Map extends BasicGameState {
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		
+		//v1.9 Set gold and level requirements
+		GOLDREQUIREMENT = 1;
+		LEVELREQUIREMENT = 2;
 		
 		// v1.6 Ideal case should be initialOffsetX = 500, initialOffsetY = 500
 		initialOffsetX = 500;
@@ -128,6 +138,7 @@ public class Map extends BasicGameState {
 		
 		died = false;
 		win = false; //v1.8
+		boundaryFlag = true; //v1.9
 		
 		//v1.5 Flag initialization
 		addScoreFlag = false;
@@ -138,12 +149,17 @@ public class Map extends BasicGameState {
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics graphics) throws SlickException {
 		if(died == false) {
 			// v1.1 -- if player collected 5 golds then move to next level
-			if(goldCounter == 1 && playerCurrentLevel<2) { //v1.8
+			if(goldCounter == GOLDREQUIREMENT && playerCurrentLevel < LEVELREQUIREMENT) { //v1.8
 				this.init(gc, sbg);	//Re-initiate the game
 				playerCurrentLevel = playerCurrentLevel + 1; //v1.4 -- new level is added
 
 			}
 			else {
+				
+				//v1.9 Change the boundaryFlag if it's the last level with gold count met.
+				if(goldCounter >= GOLDREQUIREMENT && playerCurrentLevel == LEVELREQUIREMENT) {
+					boundaryFlag = false;
+				}
 				
 				//Track player position
 				graphics.drawString("X: " + playerPosX + " Y: " + playerPosY, 800, 20);
@@ -181,7 +197,7 @@ public class Map extends BasicGameState {
 				//Render the dungeon
 
 				//v1.8 -- Create an exit location in the middle of the final room.
-				if(goldCounter >= 1 && playerCurrentLevel==2) { 
+				if(goldCounter >= GOLDREQUIREMENT && playerCurrentLevel==LEVELREQUIREMENT) { 
 					exitLocation = new Location(rooms.get(rooms.size()-1).getRoomLocation().getX()+rooms.get(rooms.size()-1).getRoomSize()/2, rooms.get(rooms.size()-1).getRoomLocation().getY()+rooms.get(rooms.size()-1).getRoomSize()/2,rooms.get(rooms.size()-1).getRoomLocation().getRoomNumber());
 					float exitPosX = exitLocation.getX()*16-initialOffsetX;
 					float exitPosY = exitLocation.getY()*16-initialOffsetY;
@@ -439,12 +455,12 @@ public class Map extends BasicGameState {
 				stepsToGold ++; //v1.4 tracks the amount of steps it takes to get a gold piece
 
 				for(int i=0; i<rooms.size(); i++) {
-					rooms.get(i).moveBotRandomly();
+					rooms.get(i).moveBotRandomly(boundaryFlag, dungeonWalls);
 				}
 			}
 
 			//v1.8 win condition made true.
-			if(goldCounter >= 1 && playerCurrentLevel==2 && playerPosX == exitLocation.getX()*16-initialOffsetX && playerPosY == exitLocation.getY()*16-initialOffsetY) {
+			if(goldCounter >= GOLDREQUIREMENT && playerCurrentLevel == LEVELREQUIREMENT && playerPosX == exitLocation.getX()*16-initialOffsetX && playerPosY == exitLocation.getY()*16-initialOffsetY) {
 				win = true;
 			}
 			for(int i=0; i<dungeonBotLocations.size(); i++) {                                                                            
