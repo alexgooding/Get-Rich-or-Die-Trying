@@ -31,10 +31,9 @@ import org.newdawn.slick.util.ResourceLoader;
 //version v1.9: Alex: Bots will move through doors once the gold condition is met on the final level. Added GOLDREQUIREMENT AND LEVELREQUIREMENT constants for ease of testing.
 
 public class Map extends BasicGameState {
-
-	Image tiles, door, wall, player, gold, bot, skeleton0, mummy0, mummy1, exit;	//Images
-	Animation dancingMummy;
-	Image[] mummies;
+	Image tiles, door, wall, player, gold, bot, skeleton0, mummy0, mummy1, exit0, exit1;	//Images
+	Animation dancingMummy, exit;
+	Image[] mummies, exits;
 	int[] duration;
 
 	//v1.1
@@ -96,14 +95,13 @@ public class Map extends BasicGameState {
 		cameraOffsetY = 100;
 		
 		// Loading images
-		door = new Image("res/door.png");
-		wall = new Image("res/wall.png");
-		player = new Image("res/player.png");
-		gold = new Image("res/gold.png");
-		bot = new Image("res/ghost.png");
-		exit = new Image("res/coin.gif"); //v1.8
+		door = new Image("res/Door.png");
+		wall = new Image("res/Wall.png");
+		player = new Image("res/Player.png");
+		gold = new Image("res/Gold.png");
+		bot = new Image("res/Ghost.png");
 		
-		// v1.7 Animations
+		// v1.7 Animation for dancing mummy if player dies
 		mummy0 = new Image("res/Mummy0.png");
 		mummy0.setFilter(mummy0.FILTER_NEAREST);
 		mummy1 = new Image("res/Mummy1.png");
@@ -112,6 +110,15 @@ public class Map extends BasicGameState {
 		duration = new int[]{300,300};
 		dancingMummy = new Animation(mummies, duration,true);
 		dancingMummy.setPingPong(true);
+		
+		// Animation for exit portal if player wins
+		exit0 = new Image("res/Exit0.png");
+		exit0.setFilter(exit0.FILTER_NEAREST);
+		exit1 = new Image("res/Exit1.png");
+		exit1.setFilter(exit1.FILTER_NEAREST);
+		exits = new Image[]{exit0,exit1};
+		exit = new Animation(exits, duration, true);
+		
 		
 		// Create Dungeon
 		Dungeon testDungeon = new Dungeon(30, 1);
@@ -124,7 +131,7 @@ public class Map extends BasicGameState {
 		rooms = testDungeon.getRooms(); //v1.3
 		
 		//v1.5	Read the leaderboad.txt file
-		leaderboardScore = LeaderBoard.read("leaderboard.txt");
+		leaderboardScore = LeaderBoard.read("Leaderboard.txt");
 		//v1.5	Sort the arraylist into descending order
 		Collections.sort(leaderboardScore, Collections.reverseOrder());
 
@@ -272,14 +279,14 @@ public class Map extends BasicGameState {
 						leaderboardScore.set(2, playerScore);
 					}		
 				}
-				// v1.5 Write the arraylist into the leaderboard.txt file, (filename, 1st score, 2nd score, 3rd score)
-				LeaderBoard.write("leaderboard.txt", leaderboardScore.get(0), leaderboardScore.get(1), leaderboardScore.get(2));
+				// v1.5 Write the arraylist into the Leaderboard.txt file, (filename, 1st score, 2nd score, 3rd score)
+				LeaderBoard.write("Leaderboard.txt", leaderboardScore.get(0), leaderboardScore.get(1), leaderboardScore.get(2));
 				
 				// v1.5 set the flag to true to escape this loop
 				addScoreFlag = true;
 				
 				// v1.5 update the arraylist
-				leaderboardScore = LeaderBoard.read("leaderboard.txt");
+				leaderboardScore = LeaderBoard.read("Leaderboard.txt");
 				
 				//v1.1 -- if died then do the following...
 				try {
