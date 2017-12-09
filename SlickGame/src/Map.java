@@ -19,16 +19,16 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.ResourceLoader;
 
 
-//version v1.0: Ray: Initial Create
-//version v1.1: Ray: Add collision logic with walls, gold and bot. 
-//version v1.2: Ray: Fixed bug for moving towards wall
-//version v1.3: Alex and Jess: Added random bot movement for each time player successfully moves. 
-//version v1.4: David: Added a way of measuring player score, current level and a minor bug fix.
-//version v1.5: Ray and David: Added the leaderboard
-//version v1.6: Ray: Handle to bugs that will go off screen
-//version v1.7: Kimberley: Added dancing mummy, adjusted leaderboad UI
-//version v1.8: Alex and Jess: Added a win condition with a gold representing the win location on the last level when gold requirement is met. Win screen is needed.
-//version v1.9: Alex: Bots will move through doors once the gold condition is met on the final level. Added GOLDREQUIREMENT AND LEVELREQUIREMENT constants for ease of testing.
+//Version 1.0: Ray: Initial commit
+//Version 1.1: Ray: Added collision logic with walls, gold and bot. 
+//Version 1.2: Ray: Fixed bug for moving towards wall
+//Version 1.3: Alex and Jess: Added random bot movement for each time player successfully moves. 
+//Version 1.4: David: Added a way of measuring player score, current level and a minor bug fix.
+//Version 1.5: Ray and David: Added the leaderboard
+//Version 1.6: Ray: Handle to bugs that will go off screen
+//Version 1.7: Kimberley: Added dancing mummy, adjusted leaderboad UI
+//Version 1.8: Alex and Jess: Added a win condition with a gold representing the win location on the last level when gold requirement is met. Win screen is needed.
+//Version 1.9: Alex: Bots will move through doors once the gold condition is met on the final level. Added GOLDREQUIREMENT AND LEVELREQUIREMENT constants for ease of testing.
 
 public class Map extends BasicGameState {
 	Image tiles, door, wall, player, gold, bot, skeleton0, mummy0, mummy1, exit0, exit1;	//Images
@@ -124,14 +124,14 @@ public class Map extends BasicGameState {
 		Dungeon testDungeon = new Dungeon(30, 1);
 		
 		// Insert all locations into arrayList
-		dungeonDoorLocations = testDungeon.getDungeonDoorLocations();
-		dungeonWalls = testDungeon.getDungeonWalls();
-		roomGold = testDungeon.getDungeonGoldLocations();
-		dungeonBotLocations = testDungeon.getDungeonBotLocations();
+		dungeonDoorLocations = testDungeon.getDoorLocations();
+		dungeonWalls = testDungeon.getWalls();
+		roomGold = testDungeon.getGoldLocations();
+		dungeonBotLocations = testDungeon.getBotLocations();
 		rooms = testDungeon.getRooms(); //v1.3
 		
 		//v1.5	Read the leaderboad.txt file
-		leaderboardScore = LeaderBoard.read("Leaderboard.txt");
+		leaderboardScore = Leaderboard.read("Leaderboard.txt");
 		//v1.5	Sort the arraylist into descending order
 		Collections.sort(leaderboardScore, Collections.reverseOrder());
 
@@ -280,13 +280,13 @@ public class Map extends BasicGameState {
 					}		
 				}
 				// v1.5 Write the arraylist into the Leaderboard.txt file, (filename, 1st score, 2nd score, 3rd score)
-				LeaderBoard.write("Leaderboard.txt", leaderboardScore.get(0), leaderboardScore.get(1), leaderboardScore.get(2));
+				Leaderboard.write("Leaderboard.txt", leaderboardScore.get(0), leaderboardScore.get(1), leaderboardScore.get(2));
 				
 				// v1.5 set the flag to true to escape this loop
 				addScoreFlag = true;
 				
 				// v1.5 update the arraylist
-				leaderboardScore = LeaderBoard.read("Leaderboard.txt");
+				leaderboardScore = Leaderboard.read("Leaderboard.txt");
 				
 				//v1.1 -- if died then do the following...
 				try {

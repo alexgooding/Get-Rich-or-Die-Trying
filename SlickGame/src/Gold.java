@@ -1,54 +1,56 @@
-public class Gold extends Item{
+public class Gold extends Item {
 	
 	/**
-	 * The amount of gold stored and where it is on the map.
-	 */
-	private int goldAmount;
+	* The amount of gold stored and where it is on the map.
+	*/
+	private int amount;
+	
 	// =========================
-  // Constructors
-  // =========================
+	// Constructors
+	// =========================
 
-  /**
-   * Default constructor - this initialises goldAmount to 1 and itemLocation is inherited from Item.
-   */
-	public Gold(){	
+	/**
+	* Default constructor - Initialises goldAmount to 1 and itemLocation is inherited from Item.
+	*/
+	public Gold() {	
 		super();
-		setGoldAmount(1);
+		setAmount(1);
 	}
 
 	/**
-   * Two-parameter version of the constructor. Initialiases goldLocation and goldAmount 
-   * to values, which are supplied to the function.
-   *
-   * @param goldLocation - the location of the gold.
-   * @param goldAmount - the amount of gold stored.
-   */
-	public Gold(Location goldLocation, int goldAmount){
+	* Two-parameter version of the constructor. 
+	* Initialiases goldLocation and goldAmount to values, 
+	* which are supplied to the function.
+	*
+	* @param goldLocation - The location of the gold.
+	* @param amount - The amount of gold stored.
+	*/
+	public Gold(Location goldLocation, int amount) {
 		super(goldLocation);
-		setGoldAmount(goldAmount);
+		setAmount(amount);
 	}
 
 	// =========================
-  // Mutators and Accessors
-  // =========================
+	// Mutators and Accessors
+	// =========================
     
-  /**
-   * Mutator for instance variables - sets the room parameters.
-   *  
-   * @param goldAmount   - new amount of gold stored.
-   */
-  public void setGoldAmount(int goldAmount){
-  	this.goldAmount = goldAmount;
-  }
+ 	/**
+	* Mutator for instance variables - Sets the room parameters.
+	*  
+	* @param amount - New amount of gold stored.
+	*/
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
 
-  /**
-   * Accessor for goldAmount. 
-   *
-   * @param  none.
-   * @return The amount of gold.
-   */   
-	public int getGoldAmount(){
-		return goldAmount;
+	/**
+	* Accessor for goldAmount. 
+	*
+	* @param  none.
+	* @return The amount of gold.
+	*/   
+	public int getGoldAmount() {
+		return amount;
 	}
 
 }

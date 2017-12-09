@@ -1,9 +1,7 @@
-import java.util.Random;
-
-public class Location{
+public class Location {
 	
 	/**
-	* x and y co-ordinates of the point on the plane. 
+	* x and y coordinates of the point on the plane. 
 	*/
 	private int x, y, roomNumber;
 
@@ -14,7 +12,7 @@ public class Location{
 	/**
 	* Default constructor - this initialises x, y and roomNumber to the point (0, 0, 1).
 	*/
-	public Location(){
+	public Location() {
 		setLocation(0, 0, 1);
 	}
 
@@ -26,7 +24,7 @@ public class Location{
 	* @param y - y-coordinate of the location.
 	* @param roomNumber - the room number of the location.
 	*/
-	public Location(int x, int y, int roomNumber){
+	public Location(int x, int y, int roomNumber) {
 		setLocation(x, y, roomNumber);
 	}
 
@@ -41,7 +39,7 @@ public class Location{
 	* @param y - new y-coordinate for this location.
 	* @param roomNumber - new room number for this location.
 	*/
-	public void setLocation(int x, int y, int roomNumber){
+	public void setLocation(int x, int y, int roomNumber) {
 	  	this.x = x;
 	  	this.y = y;
 		this.roomNumber = roomNumber;
@@ -52,7 +50,7 @@ public class Location{
 	*
 	* @param x - new x-coordinate for this location.
 	*/
-	public void setX(int x){
+	public void setX(int x) {
     	this.x = x;
 	}
 
@@ -60,7 +58,7 @@ public class Location{
 	* Mutator for y.
 	* @param y - new y-coordinate for this location.
 	*/
-    public void setY(int y){
+    public void setY(int y) {
     	this.y = y;
     }
 
@@ -68,27 +66,27 @@ public class Location{
 	* Mutator for roomNumber.
 	* @param roomNumber - new room number for this location.
 	*/
-  	public void setRoomNumber(int roomNumber){
+  	public void setRoomNumber(int roomNumber) {
     	this.roomNumber = roomNumber;
   	}
 
 	/**
-	* Accessor for x co-ordinate. 
+	* Accessor for x coordinate. 
 	*
 	* @param  none.
-	* @return The x co-ordinate of this location.
+	* @return The x coordinate of this location.
 	*/   
-	public int getX(){
+	public int getX() {
 		return x;
 	}
 
 	/**
-	* Accessor for y co-ordinate. 
+	* Accessor for y coordinate. 
 	*
 	* @param  none.
-	* @return The y co-ordinate of this location.
+	* @return The y coordinate of this location.
 	*/   
-	public int getY(){
+	public int getY() {
 		return y;
 	}
 	
@@ -98,7 +96,7 @@ public class Location{
 	* @param  none.
 	* @return The room number of this location.
 	*/   
-	public int getRoomNumber(){
+	public int getRoomNumber() {
 		return roomNumber;
 	}
 
@@ -112,7 +110,7 @@ public class Location{
 	* @param  none.
 	* @return void.
 	*/ 
-	public void printLocation(){
+	public void printLocation() {
 		System.out.printf("(%d, %d, %d)\n", x, y, roomNumber);
 	}
 
@@ -122,7 +120,7 @@ public class Location{
 	* @param  locationArray - an array containing objects of type Location.
 	* @return void.
 	*/ 
-	public void printLocationArray(Location[] locationArray){
+	public void printLocationArray(Location[] locationArray) {
     	int arrayLength = locationArray.length;
     	for(int i=0; i<arrayLength; i++){
       		System.out.printf("(%d, %d, %d)\n", locationArray[i].getX(), locationArray[i].getY(), locationArray[i].getRoomNumber());
@@ -130,27 +128,27 @@ public class Location{
   	}
 	
 	/**
-	* Returns the distance from a location to location a.
+	* Returns the distance from a location to another location.
 	*
 	* @param  l - the location we want to calculate the distance from. 
 	* @return The distance from location l as a double.
 	*/ 
-  	public double distanceFrom(Location l){
+  	public double distanceFrom(Location l) {
     	double distance = Math.sqrt((Math.pow(x-l.getX(),2))*Math.pow(y-l.getY(),2));
     	return distance; 
   	}
 
 	/**
-	* Returns whether a location is equal to location l.
+	* Returns whether a location is equal to another location.
 	*
 	* @param  l - the location we want to compare. 
 	* @return a boolean indicating whether the two locations are equal.
 	*/ 
-  	public boolean equals(Location l){
-    	if(x==l.getX() && y==l.getY()){
+  	public boolean equals(Location l) {
+    	if(x==l.getX() && y==l.getY()) {
       	return true;
     	}
-    	else{
+    	else {
       		return false;
     	}
   	}

@@ -1,7 +1,7 @@
-public class Bot{
+public class Bot {
 
 	/**
-	* botLocation stores the co-ordinates of the bot and the room number the bot is in.
+	* botLocation stores the coordinates of the bot and the room number the bot is in.
 	*/
 	private Location botLocation = new Location();
 
@@ -10,9 +10,9 @@ public class Bot{
 	// =========================
 
 	/**
-	* Default constructor - this initialises botLocation to (0, 0, 1).
+	* Default constructor - Initialises botLocation to (0, 0, 1).
 	*/
-	public Bot(){
+	public Bot() {
 		Location defaultLocation = new Location(0, 0 ,1);
 		setBot(defaultLocation);
 	}
@@ -32,11 +32,11 @@ public class Bot{
 	// =========================
 
 	/**
-	* Mutator for instance variables - sets the bot parameter.
+	* Mutator for instance variables - Sets the bot parameter.
 	*
 	* @param botLocation - new location of the bot.
 	*/
-	public void setBot(Location botLocation){
+	public void setBot(Location botLocation) {
 		this.botLocation = botLocation;
 	}
 
@@ -46,7 +46,7 @@ public class Bot{
 	* @param  none.
 	* @return The location of the bot.
 	*/   
-	public Location getBotLocation(){
+	public Location getBotLocation( ){
 		return botLocation;
 	}
 
@@ -60,7 +60,7 @@ public class Bot{
 	* @param c - the direction the bot moves in.
 	* @return void.
 	*/
-	public void updateBotLocation(char c){
+	public void updateBotLocation(char c) {
 		if(c == 'n'){
 			botLocation.setY(botLocation.getY()+1);
 		}

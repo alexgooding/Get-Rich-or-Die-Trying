@@ -6,8 +6,8 @@ import org.newdawn.slick.state.*;
 import org.newdawn.slick.util.ResourceLoader;
 import org.newdawn.slick.Music;	//v1.1
 
-//version v1.0: Ray: Initial Create
-//version v1.1: Ray and David: Added Music
+// version v1.0: Ray: Initial Create
+// version v1.1: Ray and David: Added Music
 public class MainMenu extends BasicGameState {
 	// Font variables
 	private TrueTypeFont titleFont;
