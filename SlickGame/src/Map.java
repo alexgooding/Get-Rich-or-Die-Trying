@@ -124,7 +124,7 @@ public class Map extends BasicGameState {
 		rooms = testDungeon.getRooms(); //v1.3
 		
 		//v1.5	Read the leaderboad.txt file
-		leaderboardScore = leaderBoard.read("leaderboard.txt");
+		leaderboardScore = LeaderBoard.read("leaderboard.txt");
 		//v1.5	Sort the arraylist into descending order
 		Collections.sort(leaderboardScore, Collections.reverseOrder());
 
@@ -273,13 +273,13 @@ public class Map extends BasicGameState {
 					}		
 				}
 				// v1.5 Write the arraylist into the leaderboard.txt file, (filename, 1st score, 2nd score, 3rd score)
-				leaderBoard.write("leaderboard.txt", leaderboardScore.get(0), leaderboardScore.get(1), leaderboardScore.get(2));
+				LeaderBoard.write("leaderboard.txt", leaderboardScore.get(0), leaderboardScore.get(1), leaderboardScore.get(2));
 				
 				// v1.5 set the flag to true to escape this loop
 				addScoreFlag = true;
 				
 				// v1.5 update the arraylist
-				leaderboardScore = leaderBoard.read("leaderboard.txt");
+				leaderboardScore = LeaderBoard.read("leaderboard.txt");
 				
 				//v1.1 -- if died then do the following...
 				try {
