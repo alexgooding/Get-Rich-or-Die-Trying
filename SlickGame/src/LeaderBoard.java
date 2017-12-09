@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
 
-public class leaderBoard {
+public class LeaderBoard {
 	
 	//version v1.0: Ray and David: Initial Create -- combine the writeFile.java and readFile.java to this
 
