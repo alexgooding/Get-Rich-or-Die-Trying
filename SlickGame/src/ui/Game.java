@@ -1,3 +1,4 @@
+package ui;
 import java.awt.Font;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -14,6 +15,11 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.ResourceLoader;
 
+import main.Main;
+import dungeon.Dungeon;
+import dungeon.Location;
+import dungeon.Room;
+
 // Version 1.0: Ray: Initial commit
 // Version 1.1: Ray: Added collision logic with walls, gold and bot. 
 // Version 1.2: Ray: Fixed bug for moving towards wall
@@ -26,15 +32,16 @@ import org.newdawn.slick.util.ResourceLoader;
 // Version 1.9: Alex: Bots will move through doors once the gold condition is met on the final level. Added GOLDREQUIREMENT AND LEVELREQUIREMENT constants for ease of testing.
 // Version 2.0: Split the player stuff to Player class, When move to new level renew dungeon only but not the whole game -> variables will not reset
 
-public class Map extends BasicGameState {
-	Image tiles, door, wall, gold, bot, skeleton0, mummy0, mummy1, exit0, exit1;	//Images
-	Animation dancingMummy, exit;
-	Image[] mummies, exits;
-	int[] duration;
+public class Game extends BasicGameState {
+	// Images
+	private static Image door, wall, gold, bot, mummy0, mummy1, exit0, exit1;
+	private static Animation dancingMummy, exit;
+	private static Image[] mummies, exits;
+	private static int[] duration;
 	
 	Player player;	// v2.0
 
-	private static int playerCurrentLevel = 1; 	//v1.4 Shows current player level (initial level is 1)
+	private static int playerCurrentLevel = 1; 	// v1.4 Shows current player level (initial level is 1)
 	private static ArrayList<Integer> leaderboardScore = new ArrayList<Integer>();
 	
 	// v1.5	Added a flag to escape the loop in update
@@ -61,7 +68,7 @@ public class Map extends BasicGameState {
 	int cameraOffsetX;
 	int cameraOffsetY;
 	
-	public Map(int map) {
+	public Game(int map) {
 	}
 
 	@Override

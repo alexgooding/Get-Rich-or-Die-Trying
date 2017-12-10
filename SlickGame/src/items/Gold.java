@@ -1,3 +1,6 @@
+package items;
+import dungeon.Location;
+
 public class Gold extends Item {
 	
 	/**

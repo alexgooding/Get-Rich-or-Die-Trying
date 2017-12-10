@@ -1,9 +1,13 @@
+package ui;
 import java.awt.Font;
 import java.io.InputStream;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
 import org.newdawn.slick.util.ResourceLoader;
+
+import main.Main;
+
 import org.newdawn.slick.Music;	// v1.1
 
 // Version 1.0: Ray: Initial commit

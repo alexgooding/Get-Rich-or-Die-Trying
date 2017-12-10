@@ -1,5 +1,9 @@
+package dungeon;
 import java.util.*;
 import java.util.Random;
+
+import items.Gold;
+
 import java.util.ArrayList;
 
 public class Room {

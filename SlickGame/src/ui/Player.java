@@ -1,8 +1,12 @@
+package ui;
 import java.util.ArrayList;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+
+import dungeon.Location;
+import dungeon.Room;
 
 // Version 2.0: Ray: Split from Map class
 

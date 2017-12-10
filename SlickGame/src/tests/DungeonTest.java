@@ -1,4 +1,7 @@
+package tests;
 import java.util.ArrayList;
+
+import dungeon.Dungeon;
 
 public class DungeonTest{
 

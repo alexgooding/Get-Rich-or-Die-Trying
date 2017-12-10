@@ -1,5 +1,9 @@
+package main;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
+
+import ui.Game;
+import ui.MainMenu;
  
 
 // Version 1.0: Ray: Initial commit
@@ -20,7 +24,7 @@ public class Main extends StateBasedGame{
 	public Main(String gameName) {
 		super(gameName);
 		this.addState(new MainMenu(startMenu));
-		this.addState(new Map(map));
+		this.addState(new Game(map));
 	}
 	
 	@Override
