@@ -89,7 +89,7 @@ public class Location {
 	public int getY() {
 		return y;
 	}
-	
+
 	/**
 	* Accessor for roomNumber. 
 	*
@@ -126,7 +126,7 @@ public class Location {
       		System.out.printf("(%d, %d, %d)\n", locationArray[i].getX(), locationArray[i].getY(), locationArray[i].getRoomNumber());
     	}
   	}
-	
+
 	/**
 	* Returns the distance from a location to another location.
 	*

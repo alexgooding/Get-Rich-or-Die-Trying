@@ -1,4 +1,3 @@
-
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
  
@@ -42,4 +41,5 @@ public class Main extends StateBasedGame{
 			e.printStackTrace();
 		}
 	}
+
 }
