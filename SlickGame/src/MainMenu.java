@@ -4,7 +4,7 @@ import java.io.InputStream;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
 import org.newdawn.slick.util.ResourceLoader;
-import org.newdawn.slick.Music;	//v1.1
+import org.newdawn.slick.Music;	// v1.1
 
 // Version 1.0: Ray: Initial commit
 // Version 1.1: Ray and David: Added Music
@@ -18,7 +18,6 @@ public class MainMenu extends BasicGameState {
 	Music music;	// v1.1
 
 	public MainMenu(int state) {
-
 	}
 
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
