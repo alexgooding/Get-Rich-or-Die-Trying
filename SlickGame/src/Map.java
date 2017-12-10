@@ -1,8 +1,4 @@
 import java.awt.Font;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,20 +32,20 @@ public class Map extends BasicGameState {
 	Image[] mummies, exits;
 	int[] duration;
 	
-	Player player;	//v2.0
+	Player player;	// v2.0
 
 	private static int playerCurrentLevel = 1; 	//v1.4 Shows current player level (initial level is 1)
 	private static ArrayList<Integer> leaderboardScore = new ArrayList<Integer>();
 	
-	//v1.5	Added a flag to escape the loop in update
+	// v1.5	Added a flag to escape the loop in update
 	private boolean addScoreFlag;
 	
-	//v1.9 Added a flag to tell whether the bots should keep to their boundaries or not and fixed gold requirements and level requirements.
+	// v1.9 Added a flag to tell whether the bots should keep to their boundaries or not and fixed gold requirements and level requirements.
 	private static boolean boundaryFlag;
 	private int GOLDREQUIREMENT;
 	private int LEVELREQUIREMENT;
 	
-	//v2.0 This should be static Getting Boundaries
+	// v2.0 This should be static Getting Boundaries
 	private static ArrayList<Location> dungeonWalls = new ArrayList<Location>();
 	private static ArrayList<Location> dungeonDoorLocations = new ArrayList<Location>();
 	private static ArrayList<Location> roomGold = new ArrayList<Location>();
@@ -70,49 +66,48 @@ public class Map extends BasicGameState {
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
-		
-		//v1.9 Set gold and level requirements
+		// v1.9 Set gold and level requirements
 		GOLDREQUIREMENT = 1;
 		LEVELREQUIREMENT = 2;
-		
+
 		// v1.6 Ideal case should be initialOffsetX = 500, initialOffsetY = 500
 		initialOffsetX = 500;
 		initialOffsetY = 500;
-		
+
 		// v1.6 Can adjust it if you want -> bigger = shift more
 		cameraOffsetX = 100;
 		cameraOffsetY = 100;
-		
+
 		// Loading images
 		door = new Image("res/Door.png");
 		wall = new Image("res/Wall.png");
 		gold = new Image("res/Gold.png");
 		bot = new Image("res/Ghost.png");
-		
+
 		// v1.7 Animation for dancing mummy if player dies
 		mummy0 = new Image("res/Mummy0.png");
-		mummy0.setFilter(mummy0.FILTER_NEAREST);
+		mummy0.setFilter(Image.FILTER_NEAREST);
 		mummy1 = new Image("res/Mummy1.png");
-		mummy1.setFilter(mummy1.FILTER_NEAREST);
+		mummy1.setFilter(Image.FILTER_NEAREST);
 		mummies = new Image[]{mummy0.getScaledCopy(2),mummy1.getScaledCopy(2)};
 		duration = new int[]{300,300};
 		dancingMummy = new Animation(mummies, duration,true);
 		dancingMummy.setPingPong(true);
-		
+
 		// Animation for exit portal if player wins
 		exit0 = new Image("res/Exit0.png");
-		exit0.setFilter(exit0.FILTER_NEAREST);
+		exit0.setFilter(Image.FILTER_NEAREST);
 		exit1 = new Image("res/Exit1.png");
-		exit1.setFilter(exit1.FILTER_NEAREST);
+		exit1.setFilter(Image.FILTER_NEAREST);
 		exits = new Image[]{exit0,exit1};
 		exit = new Animation(exits, duration, true);
-		
-		//v2.0 Encapsulate the create dungeon code to function
+
+		// v2.0 Encapsulate the create dungeon code to function
 		this.createDungeon();
 
 		//v1.5	Read the leaderboad.txt file
 		leaderboardScore = Leaderboard.read("Leaderboard.txt");
-		
+
 		//v1.5	Sort the arraylist into descending order
 		Collections.sort(leaderboardScore, Collections.reverseOrder());
 
@@ -120,24 +115,23 @@ public class Map extends BasicGameState {
 		//v2.0 Constructor initiate with staring position
 		player = new Player(dungeonWalls.get(0).getX()*16- initialOffsetX+16, 
 				dungeonWalls.get(0).getY()*16- initialOffsetY+16);
-		
-		
+
 		boundaryFlag = true; //v1.9
-		
+
 		//v1.5 Flag initialization
 		addScoreFlag = false;
-		
+
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics graphics) throws SlickException {
 		// v2.0 Get variables from player class
-		if(player.isDied() == false) {
+		if (player.isDied() == false) {
 			// v1.1 -- if player collected 5 golds then move to next level
-			if(player.getGoldCounter() == GOLDREQUIREMENT && playerCurrentLevel < LEVELREQUIREMENT) { //v1.8
+			if (player.getGoldCounter() == GOLDREQUIREMENT && playerCurrentLevel < LEVELREQUIREMENT) { //v1.8
 				this.createDungeon();	//v2.0 regenerate the dungeon instead of re-initiate the whole game
-				player.setPlayerPosX(dungeonWalls.get(0).getX()*16- initialOffsetX+16);
-				player.setPlayerPosY(dungeonWalls.get(0).getY()*16- initialOffsetY+16);
+				player.setPlayerPosX(dungeonWalls.get(0).getX()*16 - initialOffsetX+16);
+				player.setPlayerPosY(dungeonWalls.get(0).getY()*16 - initialOffsetY+16);
 				player.setGoldCounter(0);
 				player.setStepsToGold(0);
 				player.setStepCounter(0);
@@ -146,80 +140,83 @@ public class Map extends BasicGameState {
 			}
 
 			//v1.9 Change the boundaryFlag if it's the last level with gold count met.
-			if(player.getGoldCounter() >= GOLDREQUIREMENT && playerCurrentLevel == LEVELREQUIREMENT) {
+			if (player.getGoldCounter() >= GOLDREQUIREMENT && 
+					playerCurrentLevel == LEVELREQUIREMENT) {
 				boundaryFlag = false;
 			}
 
-			//Track player position
-			graphics.drawString("X: " + player.getPlayerPosX() + " Y: " + player.getPlayerPosY(), 800, 20);
+			// Track player position
+			graphics.drawString("X: " + player.getPlayerPosX() + 
+					" Y: " + player.getPlayerPosY(), 800, 20);
 
-			//v1.1 -- Display of how much gold the player collected
+			// v1.1 -- Display of how much gold the player collected
 			graphics.drawString("Gold Collected: " + player.getGoldCounter(), 800, 500);
 
-			//v1.3 -- Display of how many steps the player has taken
+			// v1.3 -- Display of how many steps the player has taken
 			graphics.drawString("Steps Taken: " + player.getStepCounter(), 800, 520);
 
-			//v1.4 -- Display of player score
+			// v1.4 -- Display of player score
 			graphics.drawString("Player Score: " + player.getPlayerScore(), 800, 540);
 
-			//v1.4 -- Display of player level
+			// v1.4 -- Display of player level
 			graphics.drawString("Current level is: " + playerCurrentLevel, 800, 560);
 
-			//v1.6 -- Check if the player is out of the screen -> translate the graphics if yes
+			// v1.6 -- Check if the player is out of the screen -> translate the graphics if yes
 			if(player.getPlayerPosX() < 32) {
 				graphics.translate(cameraOffsetX, 0);
 			}
 
-			if(player.getPlayerPosX() > Main.winWidth - 32) {
+			if (player.getPlayerPosX() > Main.winWidth - 32) {
 				graphics.translate(-cameraOffsetX, 0);
 			}
 
-			if(player.getPlayerPosY() > Main.winHeight - 32) {
+			if (player.getPlayerPosY() > Main.winHeight - 32) {
 				graphics.translate(0, -cameraOffsetY);
 			}
 
-			if(player.getPlayerPosY() < 32) {
+			if (player.getPlayerPosY() < 32) {
 				graphics.translate(0, cameraOffsetY);
 			}
 
 
-			//Render the dungeon
+			// Render the dungeon
 
-			//v1.8 -- Create an exit location in the middle of the final room.
-			if(player.getGoldCounter() >= GOLDREQUIREMENT && playerCurrentLevel==LEVELREQUIREMENT) { 
+			// v1.8 -- Create an exit location in the middle of the final room.
+			if (player.getGoldCounter() >= GOLDREQUIREMENT && playerCurrentLevel==LEVELREQUIREMENT) {
+				// ***Should find a way to break down code below***
 				exitLocation = new Location(rooms.get(rooms.size()-1).getRoomLocation().getX()+rooms.get(rooms.size()-1).getRoomSize()/2, rooms.get(rooms.size()-1).getRoomLocation().getY()+rooms.get(rooms.size()-1).getRoomSize()/2,rooms.get(rooms.size()-1).getRoomLocation().getRoomNumber());
 				float exitPosX = exitLocation.getX()*16-initialOffsetX;
 				float exitPosY = exitLocation.getY()*16-initialOffsetY;
 				exit.draw(exitPosX, exitPosY);
 			}
 
-			for(int i=0; i<dungeonWalls.size(); i++) {
+			for (int i=0; i<dungeonWalls.size(); i++) {
 				float wallsPosX = dungeonWalls.get(i).getX()*16-initialOffsetX;
-				float wallsPosY = dungeonWalls.get(i).getY()*16- initialOffsetY;
+				float wallsPosY = dungeonWalls.get(i).getY()*16-initialOffsetY;
 				//System.out.println("WallX: " + wallsPosX);
 				//System.out.println("WallY: " + wallsPosY);
 				wall.draw(wallsPosX, wallsPosY);
 			}
 
-			for(int i=0; i<dungeonDoorLocations.size(); i++) {
+			for (int i=0; i<dungeonDoorLocations.size(); i++) {
 				float doorPosX = dungeonDoorLocations.get(i).getX()*16-initialOffsetX;
-				float doorPosY = dungeonDoorLocations.get(i).getY()*16- initialOffsetY;
+				float doorPosY = dungeonDoorLocations.get(i).getY()*16-initialOffsetY;
 				//System.out.println("DoorX: " + doorPosX);
 				//System.out.println("DoorY: " + doorPosY);
 				door.draw(doorPosX, doorPosY);
 			}
 
-			for(int i=0; i<roomGold.size(); i++) {
-				float goldPosX = roomGold.get(i).getX()*16- initialOffsetX;
-				float goldPosY = roomGold.get(i).getY()*16- initialOffsetY;
+			for (int i=0; i<roomGold.size(); i++) {
+				float goldPosX = roomGold.get(i).getX()*16-initialOffsetX;
+				float goldPosY = roomGold.get(i).getY()*16-initialOffsetY;
 				//System.out.println("GoldX: " + goldPosX);
 				//System.out.println("GoldY: " + goldPosY);
 				gold.draw(goldPosX, goldPosY);
 			}
 
-			for(int i=0; i<dungeonBotLocations.size(); i++) {
+			for (int i=0; i<dungeonBotLocations.size(); i++) {
 				float botPosX = dungeonBotLocations.get(i).getX()*16-initialOffsetX;
-				float botPosY = dungeonBotLocations.get(i).getY()*16- initialOffsetY;
+				float botPosY = dungeonBotLocations.get(i).getY()*16-initialOffsetY;
 				//System.out.println("BotX: " + botPosX);
 				//System.out.println("BotY: " + botPosY);
 				bot.draw(botPosX, botPosY);
@@ -257,10 +254,11 @@ public class Map extends BasicGameState {
 					else {
 						// v1.5 Swap the player score with the 3rd score 
 						leaderboardScore.set(2, player.getPlayerScore());
-					}		
+					}
 				}
 				// v1.5 Write the arraylist into the Leaderboard.txt file, (filename, 1st score, 2nd score, 3rd score)
-				Leaderboard.write("Leaderboard.txt", leaderboardScore.get(0), leaderboardScore.get(1), leaderboardScore.get(2));
+				Leaderboard.write("Leaderboard.txt", leaderboardScore.get(0), 
+						leaderboardScore.get(1), leaderboardScore.get(2));
 
 				// v1.5 set the flag to true to escape this loop
 				addScoreFlag = true;
@@ -269,7 +267,7 @@ public class Map extends BasicGameState {
 				leaderboardScore = Leaderboard.read("Leaderboard.txt");
 			}
 			else {
-				//v1.1 -- if died then do the following...
+				// v1.1 -- if died then do the following...
 				try {
 					// Set font for game ended
 					InputStream dungeonFont	= ResourceLoader.getResourceAsStream("res/Dungeon.ttf");
@@ -277,25 +275,32 @@ public class Map extends BasicGameState {
 					awFont = awFont.deriveFont(32f);
 					boolean antiAlias = true;
 					TrueTypeFont textFont = new TrueTypeFont(awFont, antiAlias);
-					textFont.drawString((Main.halfWidth - textFont.getWidth("YOU DIED!") / 2 ), 150, "YOU DIED!");
-					textFont.drawString((Main.halfWidth - textFont.getWidth("(Press ENTER to restart)") / 2 ), 200, "(Press ENTER to restart)");
+					textFont.drawString((Main.halfWidth - 
+							textFont.getWidth("YOU DIED!") / 2 ), 150, "YOU DIED!");
+					textFont.drawString((Main.halfWidth - 
+							textFont.getWidth("(Press ENTER to restart)") / 2 ), 200, "(Press ENTER to restart)");
 
 					// v1.7 Animation
 					dancingMummy.draw(Main.halfWidth, 250);
 
 					// v1.7 Leaderboard
 					graphics.drawString("Player Score: " + player.getPlayerScore(), Main.halfWidth - 100, 300);
+
 					// v1.7 Border
 					graphics.drawRect(Main.halfWidth - 100, 340, 200, 200);
-					textFont.drawString((Main.halfWidth - textFont.getWidth("Leaderboard") / 2 ), 350, "Leaderboard");
-					graphics.drawString("1st " + leaderboardScore.get(0), Main.halfWidth - 50, 400);
-					graphics.drawString("2nd " + leaderboardScore.get(1), Main.halfWidth - 50, 450);
-					graphics.drawString("3rd " + leaderboardScore.get(2), Main.halfWidth - 50, 500);
+					textFont.drawString((Main.halfWidth - 
+							textFont.getWidth("Leaderboard") / 2 ), 350, "Leaderboard");
+					graphics.drawString("1st " + leaderboardScore.get(0), 
+							Main.halfWidth - 50, 400);
+					graphics.drawString("2nd " + leaderboardScore.get(1), 
+							Main.halfWidth - 50, 450);
+					graphics.drawString("3rd " + leaderboardScore.get(2), 
+							Main.halfWidth - 50, 500);
 
 					if(gc.getInput().isKeyPressed(Input.KEY_ENTER)) {
 						this.init(gc, sbg);
-						player.setPlayerScore(0); //v1.4 -- resets the player score upon death
-						playerCurrentLevel = 1; //v1.4 -- resets the players current level upon death
+						player.setPlayerScore(0); // v1.4 -- resets the player score upon death
+						playerCurrentLevel = 1; // v1.4 -- resets the players current level upon death
 					}
 				}
 				catch (Exception e) {
@@ -311,30 +316,30 @@ public class Map extends BasicGameState {
 
 		// Getting input from player
 		Input input = gc.getInput();
-		
+
 		// v2.0 Check keyboard input and update variables
 		player.update(initialOffsetX, initialOffsetY, boundaryFlag, input, 
 				dungeonWalls, roomGold, rooms);
 
-		//v1.8 win condition made true.
+		// v1.8 Win condition made true.
 		if(player.getGoldCounter() >= GOLDREQUIREMENT && playerCurrentLevel == LEVELREQUIREMENT 
 				&& player.getPlayerPosX() == exitLocation.getX()*16-initialOffsetX && player.getPlayerPosY() == exitLocation.getY()*16-initialOffsetY) {
 			player.setWin(true);
 		}
-		
+
 		for(int i=0; i<dungeonBotLocations.size(); i++) {                                                                            
-			//v1.3 Added extra condition to stop player dying upon spawn.
+			// v1.3 Added extra condition to stop player dying upon spawn.
 			if(player.getPlayerPosX() == dungeonBotLocations.get(i).getX()*16- initialOffsetX 
 					&& player.getPlayerPosY() == dungeonBotLocations.get(i).getY()*16- initialOffsetY && player.getStepCounter() != 0) {
-				player.setDied(true);	//Set flag value
+				player.setDied(true);	// Set flag value
 			}
 		}
-		
+
 		if(input.isKeyPressed(Input.KEY_ESCAPE)) {
 			System.exit(0);
 		}
-	}	
-	
+	}
+
 	// v2.0 Create a new Dungeon
 	public void createDungeon() {
 		// Create Dungeon
@@ -352,4 +357,5 @@ public class Map extends BasicGameState {
 	public int getID() {
 		return 1;
 	}
+
 }
