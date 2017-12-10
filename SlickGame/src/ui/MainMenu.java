@@ -5,10 +5,8 @@ import java.io.InputStream;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
 import org.newdawn.slick.util.ResourceLoader;
-
-import main.Main;
-
 import org.newdawn.slick.Music;	// v1.1
+import main.Main;
 
 // Version 1.0: Ray: Initial commit
 // Version 1.1: Ray and David: Added Music
@@ -65,14 +63,16 @@ public class MainMenu extends BasicGameState {
 		System.out.println("X: " + mousePosX + " Y: " + mousePosY);
 		
 		// If Start Game button is pressed, start the game
-		if((mousePosX > buttonCenter) && (mousePosX < buttonCenter +  300) && (mousePosY >  Main.halfHeight + 20 && mousePosY < Main.halfHeight + 500)) {
+		if ((mousePosX > buttonCenter) && (mousePosX < buttonCenter +  300) 
+				&& (mousePosY >  Main.halfHeight + 20 && mousePosY < Main.halfHeight + 500)) {
 			if(input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
 				sbg.enterState(1);
 			}
 		}
 		// If Quit button is pressed, the game window is closed
-		if((mousePosX > buttonCenter && mousePosX < buttonCenter + 300) && (mousePosY > Main.halfHeight + 170 && mousePosY < 650)) {
-			if(input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+		if ((mousePosX > buttonCenter && mousePosX < buttonCenter + 300) 
+				&& (mousePosY > Main.halfHeight + 170 && mousePosY < 650)) {
+			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
 				System.exit(0);
 			}
 		}

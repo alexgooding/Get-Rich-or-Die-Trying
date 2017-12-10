@@ -56,8 +56,7 @@ public class Leaderboard {
         
         // Error reading file
         catch(IOException ex) {
-            System.out.println("Error reading file '"  + fileName + "'");                  
-           
+            System.out.println("Error reading file '"  + fileName + "'");
         }
         return leaderboardScore;
     }

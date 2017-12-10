@@ -30,7 +30,8 @@ import dungeon.Room;
 // Version 1.7: Kimberley: Added dancing mummy, adjusted leaderboad UI
 // Version 1.8: Alex and Jess: Added a win condition with a gold representing the win location on the last level when gold requirement is met. Win screen is needed.
 // Version 1.9: Alex: Bots will move through doors once the gold condition is met on the final level. Added GOLDREQUIREMENT AND LEVELREQUIREMENT constants for ease of testing.
-// Version 2.0: Split the player stuff to Player class, When move to new level renew dungeon only but not the whole game -> variables will not reset
+// Version 2.0: Ray: Split the player stuff to Player class, When move to new level renew dungeon only but not the whole game -> variables will not reset
+// Version 2.1: Kimberley: Added win screen
 
 public class Game extends BasicGameState {
 	// Images
@@ -38,27 +39,31 @@ public class Game extends BasicGameState {
 	private static Animation dancingMummy, exit;
 	private static Image[] mummies, exits;
 	private static int[] duration;
-	
+
 	Player player;	// v2.0
 
 	private static int playerCurrentLevel = 1; 	// v1.4 Shows current player level (initial level is 1)
 	private static ArrayList<Integer> leaderboardScore = new ArrayList<Integer>();
-	
+
 	// v1.5	Added a flag to escape the loop in update
 	private boolean addScoreFlag;
-	
+
 	// v1.9 Added a flag to tell whether the bots should keep to their boundaries or not and fixed gold requirements and level requirements.
 	private static boolean boundaryFlag;
 	private int GOLDREQUIREMENT;
 	private int LEVELREQUIREMENT;
-	
-	// v2.0 This should be static Getting Boundaries
+
+	// v2.0 Get locations
 	private static ArrayList<Location> dungeonWalls = new ArrayList<Location>();
 	private static ArrayList<Location> dungeonDoorLocations = new ArrayList<Location>();
 	private static ArrayList<Location> roomGold = new ArrayList<Location>();
 	private static ArrayList<Location> dungeonBotLocations = new ArrayList<Location>();
 	private static ArrayList<Room> rooms = new ArrayList<Room>(); //v1.3
 	private static Location exitLocation = new Location(); //v1.8
+	
+	// v2.1 Exit locations
+	private static float exitPosX;
+	private static float exitPosY;
 	
 	// v1.6 declaring the offset variables for the render
 	int initialOffsetX;
@@ -98,7 +103,7 @@ public class Game extends BasicGameState {
 		mummy1.setFilter(Image.FILTER_NEAREST);
 		mummies = new Image[]{mummy0.getScaledCopy(2),mummy1.getScaledCopy(2)};
 		duration = new int[]{300,300};
-		dancingMummy = new Animation(mummies, duration,true);
+		dancingMummy = new Animation(mummies, duration, true);
 		dancingMummy.setPingPong(true);
 
 		// Animation for exit portal if player wins
@@ -112,15 +117,16 @@ public class Game extends BasicGameState {
 		// v2.0 Encapsulate the create dungeon code to function
 		this.createDungeon();
 
-		//v1.5	Read the leaderboad.txt file
+		// v1.5	Read the leaderboad.txt file
 		leaderboardScore = Leaderboard.read("Leaderboard.txt");
 
-		//v1.5	Sort the arraylist into descending order
+		// v1.5	Sort the arraylist into descending order
 		Collections.sort(leaderboardScore, Collections.reverseOrder());
 
-		//v1.6 Set Player position to the first room first wall created, initialOffsetX =make it to be within screen, (*16)=image resolution, (+16)=next tile of the wall
-		//v2.0 Constructor initiate with staring position
-		player = new Player(dungeonWalls.get(0).getX()*16- initialOffsetX+16, 
+		// v1.6 Set player position to the first room created 
+		// initialOffsetX = set player within screen, (*16) = image resolution, (+16) = next tile of the wall
+		// v2.0 Constructor initiate with staring position
+		player = new Player(dungeonWalls.get(0).getX()*16 - initialOffsetX+16, 
 				dungeonWalls.get(0).getY()*16- initialOffsetY+16);
 
 		boundaryFlag = true; //v1.9
@@ -135,7 +141,8 @@ public class Game extends BasicGameState {
 		// v2.0 Get variables from player class
 		if (player.isDied() == false) {
 			// v1.1 -- if player collected 5 golds then move to next level
-			if (player.getGoldCounter() == GOLDREQUIREMENT && playerCurrentLevel < LEVELREQUIREMENT) { //v1.8
+			if (player.getGoldCounter() == GOLDREQUIREMENT && 
+					playerCurrentLevel < LEVELREQUIREMENT) { //v1.8
 				this.createDungeon();	//v2.0 regenerate the dungeon instead of re-initiate the whole game
 				player.setPlayerPosX(dungeonWalls.get(0).getX()*16 - initialOffsetX+16);
 				player.setPlayerPosY(dungeonWalls.get(0).getY()*16 - initialOffsetY+16);
@@ -157,16 +164,20 @@ public class Game extends BasicGameState {
 					" Y: " + player.getPlayerPosY(), 800, 20);
 
 			// v1.1 -- Display of how much gold the player collected
-			graphics.drawString("Gold Collected: " + player.getGoldCounter(), 800, 500);
+			graphics.drawString("Gold Collected: " + 
+			player.getGoldCounter(), 800, 500);
 
 			// v1.3 -- Display of how many steps the player has taken
-			graphics.drawString("Steps Taken: " + player.getStepCounter(), 800, 520);
+			graphics.drawString("Steps Taken: " + 
+			player.getStepCounter(), 800, 520);
 
 			// v1.4 -- Display of player score
-			graphics.drawString("Player Score: " + player.getPlayerScore(), 800, 540);
+			graphics.drawString("Player Score: " + 
+			player.getPlayerScore(), 800, 540);
 
 			// v1.4 -- Display of player level
-			graphics.drawString("Current level is: " + playerCurrentLevel, 800, 560);
+			graphics.drawString("Current level]: " + 
+			playerCurrentLevel, 800, 560);
 
 			// v1.6 -- Check if the player is out of the screen -> translate the graphics if yes
 			if(player.getPlayerPosX() < 32) {
@@ -189,12 +200,20 @@ public class Game extends BasicGameState {
 			// Render the dungeon
 
 			// v1.8 -- Create an exit location in the middle of the final room.
-			if (player.getGoldCounter() >= GOLDREQUIREMENT && playerCurrentLevel==LEVELREQUIREMENT) {
-				// ***Should find a way to break down code below***
-				exitLocation = new Location(rooms.get(rooms.size()-1).getRoomLocation().getX()+rooms.get(rooms.size()-1).getRoomSize()/2, rooms.get(rooms.size()-1).getRoomLocation().getY()+rooms.get(rooms.size()-1).getRoomSize()/2,rooms.get(rooms.size()-1).getRoomLocation().getRoomNumber());
-				float exitPosX = exitLocation.getX()*16-initialOffsetX;
-				float exitPosY = exitLocation.getY()*16-initialOffsetY;
+			if (player.getGoldCounter() >= GOLDREQUIREMENT && 
+			playerCurrentLevel == LEVELREQUIREMENT) {
+				exitLocation = new Location(rooms.get(rooms.size()-1).
+						getRoomLocation().getX()+rooms.get(rooms.size()-1).getRoomSize()/2, 
+						rooms.get(rooms.size()-1).getRoomLocation().getY()+rooms.get(rooms.size()-1).
+						getRoomSize()/2,rooms.get(rooms.size()-1).getRoomLocation().getRoomNumber());
+				exitPosX = exitLocation.getX()*16-initialOffsetX;
+				exitPosY = exitLocation.getY()*16-initialOffsetY;
 				exit.draw(exitPosX, exitPosY);
+			}
+			
+			// v2.1 -- If player goes to the exit
+			if (player.getPlayerPosX() == exitPosX && player.getPlayerPosY() == exitPosY) {
+				sbg.enterState(2);
 			}
 
 			for (int i=0; i<dungeonWalls.size(); i++) {
@@ -233,17 +252,18 @@ public class Game extends BasicGameState {
 			player.draw();				
 		}
 		else {
-			//v1.5	LeaderBoard Logic
-			if(addScoreFlag == false){
-				//v1.5 Check if the player score is greater than the 3rd score
-				if(player.getPlayerScore()> leaderboardScore.get(2)) {
+			// v1.5	LeaderBoard Logic
+			if (addScoreFlag == false){
 
-					//v1.5 Check if the player score is greater than the 2nd score
-					if(player.getPlayerScore() > leaderboardScore.get(1)) {
+				// v1.5 Check if the player score is greater than the 3rd score
+				if (player.getPlayerScore()> leaderboardScore.get(2)) {
 
-						//v1.5 Check if the player score is greater than the 1st score
-						if(player.getPlayerScore() > leaderboardScore.get(0)) {
+					// v1.5 Check if the player score is greater than the 2nd score
 
+					if (player.getPlayerScore() > leaderboardScore.get(1)) {
+
+						// v1.5 Check if the player score is greater than the 1st score
+						if (player.getPlayerScore() > leaderboardScore.get(0)) {
 							// v1.5 Swap the player score with the 1st score 
 							int tempHighest = leaderboardScore.get(0);
 							int tempSecHighest = leaderboardScore.get(1);
@@ -263,18 +283,18 @@ public class Game extends BasicGameState {
 						leaderboardScore.set(2, player.getPlayerScore());
 					}
 				}
-				// v1.5 Write the arraylist into the Leaderboard.txt file, (filename, 1st score, 2nd score, 3rd score)
+				// v1.5 Write the top 3 scores into Leaderboard.txt file
 				Leaderboard.write("Leaderboard.txt", leaderboardScore.get(0), 
 						leaderboardScore.get(1), leaderboardScore.get(2));
 
-				// v1.5 set the flag to true to escape this loop
+				// v1.5 Set the flag to true to escape this loop
 				addScoreFlag = true;
 
-				// v1.5 update the arraylist
+				// v1.5 Update the arraylist
 				leaderboardScore = Leaderboard.read("Leaderboard.txt");
 			}
 			else {
-				// v1.1 -- if died then do the following...
+				// v1.1 -- if player died then do the following...
 				try {
 					// Set font for game ended
 					InputStream dungeonFont	= ResourceLoader.getResourceAsStream("res/Dungeon.ttf");
@@ -282,10 +302,12 @@ public class Game extends BasicGameState {
 					awFont = awFont.deriveFont(32f);
 					boolean antiAlias = true;
 					TrueTypeFont textFont = new TrueTypeFont(awFont, antiAlias);
+					String message1 = "YOU DIED!";
+					String message2 = "(Press ENTER to restart";
 					textFont.drawString((Main.halfWidth - 
-							textFont.getWidth("YOU DIED!") / 2 ), 150, "YOU DIED!");
+							textFont.getWidth(message1) / 2 ), 150, message1);
 					textFont.drawString((Main.halfWidth - 
-							textFont.getWidth("(Press ENTER to restart)") / 2 ), 200, "(Press ENTER to restart)");
+							textFont.getWidth(message2) / 2 ), 200, message2);
 
 					// v1.7 Animation
 					dancingMummy.draw(Main.halfWidth, 250);
@@ -304,7 +326,7 @@ public class Game extends BasicGameState {
 					graphics.drawString("3rd " + leaderboardScore.get(2), 
 							Main.halfWidth - 50, 500);
 
-					if(gc.getInput().isKeyPressed(Input.KEY_ENTER)) {
+					if (gc.getInput().isKeyPressed(Input.KEY_ENTER)) {
 						this.init(gc, sbg);
 						player.setPlayerScore(0); // v1.4 -- resets the player score upon death
 						playerCurrentLevel = 1; // v1.4 -- resets the players current level upon death
@@ -329,19 +351,21 @@ public class Game extends BasicGameState {
 				dungeonWalls, roomGold, rooms);
 
 		// v1.8 Win condition made true.
-		if(player.getGoldCounter() >= GOLDREQUIREMENT && playerCurrentLevel == LEVELREQUIREMENT 
-				&& player.getPlayerPosX() == exitLocation.getX()*16-initialOffsetX && player.getPlayerPosY() == exitLocation.getY()*16-initialOffsetY) {
+		if (player.getGoldCounter() >= GOLDREQUIREMENT && 
+				playerCurrentLevel == LEVELREQUIREMENT && 
+				player.getPlayerPosX() == exitLocation.getX()*16-initialOffsetX && 
+				player.getPlayerPosY() == exitLocation.getY()*16-initialOffsetY) {
 			player.setWin(true);
 		}
 
-		for(int i=0; i<dungeonBotLocations.size(); i++) {                                                                            
+		for (int i=0; i<dungeonBotLocations.size(); i++) {                                                                            
 			// v1.3 Added extra condition to stop player dying upon spawn.
-			if(player.getPlayerPosX() == dungeonBotLocations.get(i).getX()*16- initialOffsetX 
-					&& player.getPlayerPosY() == dungeonBotLocations.get(i).getY()*16- initialOffsetY && player.getStepCounter() != 0) {
+			if (player.getPlayerPosX() == dungeonBotLocations.get(i).getX()*16 - initialOffsetX 
+					&& player.getPlayerPosY() == dungeonBotLocations.get(i).getY()*16 - 
+					initialOffsetY && player.getStepCounter() != 0) {
 				player.setDied(true);	// Set flag value
 			}
 		}
-
 		if(input.isKeyPressed(Input.KEY_ESCAPE)) {
 			System.exit(0);
 		}
