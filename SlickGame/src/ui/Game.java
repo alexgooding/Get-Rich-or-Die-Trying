@@ -213,6 +213,7 @@ public class Game extends BasicGameState {
 			
 			// v2.1 -- If player goes to the exit
 			if (player.getPlayerPosX() == exitPosX && player.getPlayerPosY() == exitPosY) {
+				sbg.init(gc);
 				sbg.enterState(2);
 			}
 
