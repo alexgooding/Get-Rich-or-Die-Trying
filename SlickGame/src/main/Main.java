@@ -45,6 +45,7 @@ public class Main extends StateBasedGame {
 		AppGameContainer appGame;
 		try {
 			appGame = new AppGameContainer(new Main(gameName));
+			appGame.setShowFPS(false);
 			appGame.setDisplayMode(winWidth, winHeight, false);	// Window resolution with no fullscreen mode
 			appGame.start();
 		} catch (SlickException e) {

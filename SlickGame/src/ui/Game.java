@@ -148,24 +148,24 @@ public class Game extends BasicGameState {
 			}
 
 			// Track player position
-			graphics.drawString("X: " + player.getPlayerPosX() + 
-					" Y: " + player.getPlayerPosY(), 800, 20);
+			// graphics.drawString("X: " + player.getPlayerPosX() + 
+			//		" Y: " + player.getPlayerPosY(), 800, 20);
 
 			// v1.1 -- Display of how much gold the player collected
 			graphics.drawString("Gold Collected: " + 
-			player.getGoldCounter(), 800, 500);
+			player.getGoldCounter(), 900, 50);
 
 			// v1.3 -- Display of how many steps the player has taken
 			graphics.drawString("Steps Taken: " + 
-			player.getStepCounter(), 800, 520);
+			player.getStepCounter(), 900, 70);
 
 			// v1.4 -- Display of player score
-			graphics.drawString("Player Score: " + 
-			player.getPlayerScore(), 800, 540);
+			graphics.drawString("Score: " + 
+			player.getPlayerScore(), 900, 90);
 
 			// v1.4 -- Display of player level
-			graphics.drawString("Current level: " + 
-			playerCurrentLevel, 800, 560);
+			graphics.drawString("Level: " + 
+			playerCurrentLevel, 900, 110);
 
 			// v1.6 -- Check if the player is out of the screen -> translate the graphics if yes
 			if(player.getPlayerPosX() < 32) {
@@ -205,7 +205,7 @@ public class Game extends BasicGameState {
 				// Check player's score with the leaderboard
 				player.checkLeaderboard();
 				// Go to win screen
-				sbg.enterState(2);
+				sbg.enterState(3);
 			}
 
 			for (int i=0; i<dungeonWalls.size(); i++) {

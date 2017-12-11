@@ -84,7 +84,7 @@ public class Win extends BasicGameState {
 		if (input.isKeyDown(Input.KEY_ENTER)) {
 			sbg.init(gc);
 			input.clearKeyPressedRecord();
-			sbg.enterState(1);
+			sbg.enterState(2);
 			// Reset the stats
 			Game.playerCurrentLevel = 1;
 		}
