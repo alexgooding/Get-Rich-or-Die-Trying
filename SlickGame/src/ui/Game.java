@@ -31,6 +31,7 @@ import dungeon.Room;
 // Version 1.9: Alex: Bots will move through doors once the gold condition is met on the final level. Added GOLDREQUIREMENT AND LEVELREQUIREMENT constants for ease of testing.
 // Version 2.0: Ray: Split the player stuff to Player class, When move to new level renew dungeon only but not the whole game -> variables will not reset
 // Version 2.1: Kimberley: Added win screen
+// Version 2.2: Ray: Added back the addScoreFlag
 
 public class Game extends BasicGameState {
 	// Images
@@ -68,6 +69,8 @@ public class Game extends BasicGameState {
 	int cameraOffsetX;
 	int cameraOffsetY;
 	
+	private static boolean addScoreFlag;	//v2.2
+	
 	private static ArrayList<Integer> leaderboardScore = new ArrayList<Integer>();
 
 	public Game(int game) {
@@ -76,8 +79,8 @@ public class Game extends BasicGameState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		// v1.9 Set gold and level requirements
-		GOLDREQUIREMENT = 5;
-		LEVELREQUIREMENT = 5;
+		GOLDREQUIREMENT = 3;
+		LEVELREQUIREMENT = 3;
 
 		// v1.6 Ideal case should be initialOffsetX = 500, initialOffsetY = 500
 		initialOffsetX = 500;
@@ -121,6 +124,7 @@ public class Game extends BasicGameState {
 				dungeonWalls.get(0).getY()*16- initialOffsetY+16);
 
 		boundaryFlag = true; // v1.9
+		addScoreFlag = false;
 
 	}
 
@@ -244,11 +248,16 @@ public class Game extends BasicGameState {
 			player.draw();				
 		}
 		else {
-			player.checkLeaderboard();
-			// v1.5 Update the arraylist
-			leaderboardScore = Leaderboard.read("Leaderboard.txt");
 			// v1.1 -- if player died then do the following...
-
+			
+			// v2.2
+			if(addScoreFlag == false) {
+				player.checkLeaderboard();
+				// v1.5 Update the arraylist
+				leaderboardScore = Leaderboard.read("Leaderboard.txt");
+				addScoreFlag = true;
+			}
+			
 			try {
 				// Set font for game ended
 				InputStream dungeonFont	= ResourceLoader.getResourceAsStream("res/Dungeon.ttf");

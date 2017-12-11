@@ -10,6 +10,9 @@ import org.newdawn.slick.util.ResourceLoader;
 
 import main.Main;
 
+//version1.0: Kimberley: Initial commit
+//version1.1: Ray: fix bug if if go to main menu not reset
+
 public class Win extends BasicGameState {
 	Player player;
 	// Media
@@ -93,6 +96,7 @@ public class Win extends BasicGameState {
 			sbg.init(gc);
 			input.clearKeyPressedRecord();
 			sbg.enterState(0);
+			Game.playerCurrentLevel = 1;	//v1.1
 		}
 	}
 
