@@ -76,8 +76,8 @@ public class Game extends BasicGameState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		// v1.9 Set gold and level requirements
-		GOLDREQUIREMENT = 1;
-		LEVELREQUIREMENT = 2;
+		GOLDREQUIREMENT = 5;
+		LEVELREQUIREMENT = 5;
 
 		// v1.6 Ideal case should be initialOffsetX = 500, initialOffsetY = 500
 		initialOffsetX = 500;

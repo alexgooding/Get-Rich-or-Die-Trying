@@ -3,6 +3,7 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
 
 import ui.Game;
+import ui.Instructions;
 import ui.MainMenu;
 import ui.Win;
  
@@ -29,14 +30,14 @@ public class Main extends StateBasedGame {
 		this.addState(new MainMenu(startMenu));
 		this.addState(new Game(game));
 		this.addState(new Win(win));
-		// this.addState(new Instructions(instructions));
+		this.addState(new Instructions(instructions));
 	}
 	
 	@Override
 	public void initStatesList(GameContainer gc) throws SlickException {
 		this.getState(startMenu).init(gc, this);
 		this.getState(game).init(gc, this);
-		// this.getState(instructions).init(gc, this);
+		this.getState(instructions).init(gc, this);
 		this.getState(win).init(gc, this);
 		this.enterState(startMenu);	// Starting page / screen
 	}

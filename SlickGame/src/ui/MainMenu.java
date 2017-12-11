@@ -16,7 +16,7 @@ public class MainMenu extends BasicGameState {
 	private boolean antiAlias = true;
 	
 	// Media
-	Image startGameButton, quitButton;
+	Image startGameButton, quitButton, htpButton;
 	Music music; // v1.1
 
 	public MainMenu(int state) {
@@ -35,6 +35,7 @@ public class MainMenu extends BasicGameState {
 			// Load image files
 			startGameButton = new Image("res/StartGame.png");
 			quitButton = new Image("res/Quit.png");
+			htpButton = new Image("res/HowToPlay.png");
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -44,12 +45,13 @@ public class MainMenu extends BasicGameState {
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		// Set game title on the screen
 		float titleWidth = titleFont.getWidth(Main.gameName);
-		titleFont.drawString((Main.winWidth - titleWidth) / 2, 200, Main.gameName, Color.white);
+		titleFont.drawString((Main.winWidth - titleWidth) / 2, 100, Main.gameName, Color.white);
 
 		// Set buttons on the screen
 		float buttonCenter = (Main.winWidth - 300) / 2;
-		startGameButton.draw(buttonCenter, Main.halfHeight + 20);
-		quitButton.draw(buttonCenter, Main.halfHeight + 170);
+		startGameButton.draw(buttonCenter, 250);
+		htpButton.draw(buttonCenter, 350);
+		quitButton.draw(buttonCenter, 450);
 	}
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
@@ -64,14 +66,21 @@ public class MainMenu extends BasicGameState {
 		
 		// If Start Game button is pressed, start the game
 		if ((mousePosX > buttonCenter) && (mousePosX < buttonCenter +  300) 
-				&& (mousePosY >  Main.halfHeight + 20 && mousePosY < Main.halfHeight + 500)) {
-			if(input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+				&& (mousePosY >  250 && mousePosY < 300)) {
+			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
 				sbg.enterState(2);
 			}
 		}
+		// If How To Play button is pressed, show instructions
+		if ((mousePosX > buttonCenter) && (mousePosX < buttonCenter + 300)
+				&& (mousePosY > 350 && mousePosY < 400)) {
+				if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+					sbg.enterState(1);
+				}
+			}
 		// If Quit button is pressed, the game window is closed
 		if ((mousePosX > buttonCenter && mousePosX < buttonCenter + 300) 
-				&& (mousePosY > Main.halfHeight + 170 && mousePosY < 650)) {
+				&& (mousePosY > 450 && mousePosY < 500)) {
 			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
 				System.exit(0);
 			}
