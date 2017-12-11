@@ -45,8 +45,8 @@ public class Game extends BasicGameState {
 
 	// v1.9 Added a flag to tell whether the bots should keep to their boundaries or not and fixed gold requirements and level requirements.
 	private static boolean boundaryFlag;
-	private int GOLDREQUIREMENT;
-	private int LEVELREQUIREMENT;
+	private static int GOLDREQUIREMENT;
+	private static int LEVELREQUIREMENT;
 
 	// v2.0 Get locations
 	private static ArrayList<Location> dungeonWalls = new ArrayList<Location>();
@@ -333,10 +333,18 @@ public class Game extends BasicGameState {
 		dungeonBotLocations = testDungeon.getBotLocations();
 		rooms = testDungeon.getRooms(); //v1.3
 	}
+	
+	public static int getGOLDREQUIREMENT() {
+		return GOLDREQUIREMENT;
+	}
+
+	public static int getLEVELREQUIREMENT() {
+		return LEVELREQUIREMENT;
+	}
 
 	@Override
 	public int getID() {
-		return 1;
+		return 2;
 	}
 
 }

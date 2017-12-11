@@ -17,23 +17,26 @@ public class Main extends StateBasedGame {
     public static final int halfWidth = winWidth / 2;
     public static final int halfHeight = winHeight / 2;
     //Sets the name of the game
-    public static final String gameName = "Dungeon Game";
+    public static final String gameName = "Get rich or die trying";
     //Game states
 	public static final int startMenu = 0;
-	public static final int game = 1;
-	public static final int win = 2;
+	public static final int instructions = 1;
+	public static final int game = 2;
+	public static final int win = 3;
 	
 	public Main(String gameName) {
 		super(gameName);
 		this.addState(new MainMenu(startMenu));
 		this.addState(new Game(game));
 		this.addState(new Win(win));
+		// this.addState(new Instructions(instructions));
 	}
 	
 	@Override
 	public void initStatesList(GameContainer gc) throws SlickException {
 		this.getState(startMenu).init(gc, this);
 		this.getState(game).init(gc, this);
+		// this.getState(instructions).init(gc, this);
 		this.getState(win).init(gc, this);
 		this.enterState(startMenu);	// Starting page / screen
 	}

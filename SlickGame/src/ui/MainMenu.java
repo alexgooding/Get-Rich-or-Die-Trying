@@ -17,7 +17,7 @@ public class MainMenu extends BasicGameState {
 	
 	// Media
 	Image startGameButton, quitButton;
-	Music music;	// v1.1
+	Music music; // v1.1
 
 	public MainMenu(int state) {
 	}
@@ -30,7 +30,7 @@ public class MainMenu extends BasicGameState {
 			// Load font
 			InputStream dungeonFont	= ResourceLoader.getResourceAsStream("res/Dungeon.ttf");
 			Font awFont = Font.createFont(Font.TRUETYPE_FONT, dungeonFont);
-			awFont = awFont.deriveFont(72f);
+			awFont = awFont.deriveFont(70f);
 			titleFont = new TrueTypeFont(awFont, antiAlias);
 			// Load image files
 			startGameButton = new Image("res/StartGame.png");
@@ -66,7 +66,7 @@ public class MainMenu extends BasicGameState {
 		if ((mousePosX > buttonCenter) && (mousePosX < buttonCenter +  300) 
 				&& (mousePosY >  Main.halfHeight + 20 && mousePosY < Main.halfHeight + 500)) {
 			if(input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
-				sbg.enterState(1);
+				sbg.enterState(2);
 			}
 		}
 		// If Quit button is pressed, the game window is closed
@@ -79,7 +79,7 @@ public class MainMenu extends BasicGameState {
 		// Enters the game if Enter key on keyboard is pressed
 		if (input.isKeyDown(Input.KEY_ENTER)) {
 			input.clearKeyPressedRecord();
-			sbg.enterState(1);
+			sbg.enterState(2);
 		}
 	}
 
