@@ -11,7 +11,7 @@ import dungeon.Room;
 // Version 2.0: Ray: Split from Map class
 
 public class Player {
-	private int playerScore;			//v1.4 Tracks the players score
+	public int playerScore;			//v1.4 Tracks the players score
 	private int goldCounter;	//For counting the total gold the player collected
 	private boolean died;		//died = true when player hit the bot
 	private int stepCounter;      //v1.3 Counts the number of steps the player takes.

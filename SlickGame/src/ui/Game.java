@@ -42,7 +42,7 @@ public class Game extends BasicGameState {
 
 	Player player;	// v2.0
 
-	private static int playerCurrentLevel = 1; 	// v1.4 Shows current player level (initial level is 1)
+	public static int playerCurrentLevel = 1; 	// v1.4 Shows current player level (initial level is 1)
 	private static ArrayList<Integer> leaderboardScore = new ArrayList<Integer>();
 
 	// v1.5	Added a flag to escape the loop in update
@@ -60,19 +60,19 @@ public class Game extends BasicGameState {
 	private static ArrayList<Location> dungeonBotLocations = new ArrayList<Location>();
 	private static ArrayList<Room> rooms = new ArrayList<Room>(); //v1.3
 	private static Location exitLocation = new Location(); //v1.8
-	
+
 	// v2.1 Exit locations
 	private static float exitPosX;
 	private static float exitPosY;
-	
+
 	// v1.6 declaring the offset variables for the render
 	int initialOffsetX;
 	int initialOffsetY;
-	
+
 	// v1.6 declaring the camera offset variables for the render 
 	int cameraOffsetX;
 	int cameraOffsetY;
-	
+
 	public Game(int map) {
 	}
 
@@ -176,7 +176,7 @@ public class Game extends BasicGameState {
 			player.getPlayerScore(), 800, 540);
 
 			// v1.4 -- Display of player level
-			graphics.drawString("Current level]: " + 
+			graphics.drawString("Current level: " + 
 			playerCurrentLevel, 800, 560);
 
 			// v1.6 -- Check if the player is out of the screen -> translate the graphics if yes

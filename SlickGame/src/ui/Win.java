@@ -10,11 +10,13 @@ import org.newdawn.slick.util.ResourceLoader;
 import main.Main;
 
 public class Win extends BasicGameState {
+	Player player;
 	// Media
 	private static Image player0, player1;
 	private static Image[] players;
 	private static Animation dancingBoy;
 	private static int[] duration;
+
 	// Fonts
 	private TrueTypeFont textFont;
 	private boolean antiAlias = true;
@@ -23,6 +25,7 @@ public class Win extends BasicGameState {
 	}
 
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		// Retrieve resources
 		try {
 			player0 = new Image("res/Player0.png");
 			player0.setFilter(Image.FILTER_NEAREST);
@@ -42,6 +45,7 @@ public class Win extends BasicGameState {
 	}
 
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+		// Message on win screen
 		dancingBoy.draw((Main.winWidth - dancingBoy.getWidth()) / 2, 150);
 		String message1 = "YOU WIN!";
 		String message2 = "(Press ENTER to restart)";
@@ -55,11 +59,15 @@ public class Win extends BasicGameState {
 		Input input = gc.getInput();
 		// Restart the game if player presses Enter
 		if (input.isKeyDown(Input.KEY_ENTER)) {
+			sbg.init(gc);
 			input.clearKeyPressedRecord();
 			sbg.enterState(1);
+			// Reset the stats
+			Game.playerCurrentLevel = 1;
 		}
 		// Return to main menu if player presses Escape
 		if (input.isKeyDown(Input.KEY_ESCAPE)) {
+			sbg.init(gc);
 			input.clearKeyPressedRecord();
 			sbg.enterState(0);
 		}

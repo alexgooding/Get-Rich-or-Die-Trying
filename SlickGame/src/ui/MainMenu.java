@@ -60,7 +60,7 @@ public class MainMenu extends BasicGameState {
 
 		// Get the coordinates for the centering of buttons for accuracy of mouse clicks
 		float buttonCenter = (Main.winWidth - 300) / 2;
-		System.out.println("X: " + mousePosX + " Y: " + mousePosY);
+		// System.out.println("X: " + mousePosX + " Y: " + mousePosY);
 		
 		// If Start Game button is pressed, start the game
 		if ((mousePosX > buttonCenter) && (mousePosX < buttonCenter +  300) 
