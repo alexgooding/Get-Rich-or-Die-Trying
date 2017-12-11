@@ -2,7 +2,6 @@ package ui;
 import java.awt.Font;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
@@ -43,10 +42,6 @@ public class Game extends BasicGameState {
 	Player player;	// v2.0
 
 	public static int playerCurrentLevel = 1; 	// v1.4 Shows current player level (initial level is 1)
-	private static ArrayList<Integer> leaderboardScore = new ArrayList<Integer>();
-
-	// v1.5	Added a flag to escape the loop in update
-	private boolean addScoreFlag;
 
 	// v1.9 Added a flag to tell whether the bots should keep to their boundaries or not and fixed gold requirements and level requirements.
 	private static boolean boundaryFlag;
@@ -72,8 +67,10 @@ public class Game extends BasicGameState {
 	// v1.6 declaring the camera offset variables for the render 
 	int cameraOffsetX;
 	int cameraOffsetY;
+	
+	private static ArrayList<Integer> leaderboardScore = new ArrayList<Integer>();
 
-	public Game(int map) {
+	public Game(int game) {
 	}
 
 	@Override
@@ -117,22 +114,13 @@ public class Game extends BasicGameState {
 		// v2.0 Encapsulate the create dungeon code to function
 		this.createDungeon();
 
-		// v1.5	Read the leaderboad.txt file
-		leaderboardScore = Leaderboard.read("Leaderboard.txt");
-
-		// v1.5	Sort the arraylist into descending order
-		Collections.sort(leaderboardScore, Collections.reverseOrder());
-
-		// v1.6 Set player position to the first room created 
+		// v1.6 Set player position to the first room created
 		// initialOffsetX = set player within screen, (*16) = image resolution, (+16) = next tile of the wall
 		// v2.0 Constructor initiate with staring position
 		player = new Player(dungeonWalls.get(0).getX()*16 - initialOffsetX+16, 
 				dungeonWalls.get(0).getY()*16- initialOffsetY+16);
 
-		boundaryFlag = true; //v1.9
-
-		//v1.5 Flag initialization
-		addScoreFlag = false;
+		boundaryFlag = true; // v1.9
 
 	}
 
@@ -213,7 +201,10 @@ public class Game extends BasicGameState {
 			
 			// v2.1 -- If player goes to the exit
 			if (player.getPlayerPosX() == exitPosX && player.getPlayerPosY() == exitPosY) {
-				sbg.init(gc);
+				Win.playerScore = player.getPlayerScore();
+				// Check player's score with the leaderboard
+				player.checkLeaderboard();
+				// Go to win screen
 				sbg.enterState(2);
 			}
 
@@ -253,97 +244,56 @@ public class Game extends BasicGameState {
 			player.draw();				
 		}
 		else {
-			// v1.5	LeaderBoard Logic
-			if (addScoreFlag == false){
+			player.checkLeaderboard();
+			// v1.5 Update the arraylist
+			leaderboardScore = Leaderboard.read("Leaderboard.txt");
+			// v1.1 -- if player died then do the following...
 
-				// v1.5 Check if the player score is greater than the 3rd score
-				if (player.getPlayerScore()> leaderboardScore.get(2)) {
+			try {
+				// Set font for game ended
+				InputStream dungeonFont	= ResourceLoader.getResourceAsStream("res/Dungeon.ttf");
+				Font awFont = Font.createFont(Font.TRUETYPE_FONT, dungeonFont);
+				awFont = awFont.deriveFont(32f);
+				boolean antiAlias = true;
+				TrueTypeFont textFont = new TrueTypeFont(awFont, antiAlias);
+				String message1 = "YOU DIED!";
+				String message2 = "(Press ENTER to restart";
+				textFont.drawString((Main.halfWidth - 
+						textFont.getWidth(message1) / 2 ), 150, message1);
+				textFont.drawString((Main.halfWidth - 
+						textFont.getWidth(message2) / 2 ), 200, message2);
 
-					// v1.5 Check if the player score is greater than the 2nd score
+				// v1.7 Animation
+				dancingMummy.draw(Main.halfWidth, 250);
 
-					if (player.getPlayerScore() > leaderboardScore.get(1)) {
+				// v1.7 Leaderboard
+				graphics.drawString("Player Score: " + player.getPlayerScore(), Main.halfWidth - 100, 300);
 
-						// v1.5 Check if the player score is greater than the 1st score
-						if (player.getPlayerScore() > leaderboardScore.get(0)) {
-							// v1.5 Swap the player score with the 1st score 
-							int tempHighest = leaderboardScore.get(0);
-							int tempSecHighest = leaderboardScore.get(1);
-							leaderboardScore.set(0, player.getPlayerScore());
-							leaderboardScore.set(1, tempHighest);
-							leaderboardScore.set(2, tempSecHighest);
-						}
-						else {
-							// v1.5 Swap the player score with the 2nd score 
-							int tempSecHighest = leaderboardScore.get(1);
-							leaderboardScore.set(1, player.getPlayerScore());
-							leaderboardScore.set(2, tempSecHighest);
-						}
-					}
-					else {
-						// v1.5 Swap the player score with the 3rd score 
-						leaderboardScore.set(2, player.getPlayerScore());
-					}
+				// v1.7 Border
+				graphics.drawRect(Main.halfWidth - 100, 340, 200, 200);
+				textFont.drawString((Main.halfWidth - 
+						textFont.getWidth("Leaderboard") / 2 ), 350, "Leaderboard");
+				graphics.drawString("1st " + leaderboardScore.get(0), 
+						Main.halfWidth - 50, 400);
+				graphics.drawString("2nd " + leaderboardScore.get(1), 
+						Main.halfWidth - 50, 450);
+				graphics.drawString("3rd " + leaderboardScore.get(2), 
+						Main.halfWidth - 50, 500);
+
+				if (gc.getInput().isKeyPressed(Input.KEY_ENTER)) {
+					this.init(gc, sbg);
+					player.setPlayerScore(0); // v1.4 -- resets the player score upon death
+					playerCurrentLevel = 1; // v1.4 -- resets the players current level upon death
 				}
-				// v1.5 Write the top 3 scores into Leaderboard.txt file
-				Leaderboard.write("Leaderboard.txt", leaderboardScore.get(0), 
-						leaderboardScore.get(1), leaderboardScore.get(2));
-
-				// v1.5 Set the flag to true to escape this loop
-				addScoreFlag = true;
-
-				// v1.5 Update the arraylist
-				leaderboardScore = Leaderboard.read("Leaderboard.txt");
 			}
-			else {
-				// v1.1 -- if player died then do the following...
-				try {
-					// Set font for game ended
-					InputStream dungeonFont	= ResourceLoader.getResourceAsStream("res/Dungeon.ttf");
-					Font awFont = Font.createFont(Font.TRUETYPE_FONT, dungeonFont);
-					awFont = awFont.deriveFont(32f);
-					boolean antiAlias = true;
-					TrueTypeFont textFont = new TrueTypeFont(awFont, antiAlias);
-					String message1 = "YOU DIED!";
-					String message2 = "(Press ENTER to restart";
-					textFont.drawString((Main.halfWidth - 
-							textFont.getWidth(message1) / 2 ), 150, message1);
-					textFont.drawString((Main.halfWidth - 
-							textFont.getWidth(message2) / 2 ), 200, message2);
-
-					// v1.7 Animation
-					dancingMummy.draw(Main.halfWidth, 250);
-
-					// v1.7 Leaderboard
-					graphics.drawString("Player Score: " + player.getPlayerScore(), Main.halfWidth - 100, 300);
-
-					// v1.7 Border
-					graphics.drawRect(Main.halfWidth - 100, 340, 200, 200);
-					textFont.drawString((Main.halfWidth - 
-							textFont.getWidth("Leaderboard") / 2 ), 350, "Leaderboard");
-					graphics.drawString("1st " + leaderboardScore.get(0), 
-							Main.halfWidth - 50, 400);
-					graphics.drawString("2nd " + leaderboardScore.get(1), 
-							Main.halfWidth - 50, 450);
-					graphics.drawString("3rd " + leaderboardScore.get(2), 
-							Main.halfWidth - 50, 500);
-
-					if (gc.getInput().isKeyPressed(Input.KEY_ENTER)) {
-						this.init(gc, sbg);
-						player.setPlayerScore(0); // v1.4 -- resets the player score upon death
-						playerCurrentLevel = 1; // v1.4 -- resets the players current level upon death
-					}
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
+			catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {		
-		// v2.0 Move the player update to player class
-
 		// Getting input from player
 		Input input = gc.getInput();
 
@@ -376,7 +326,6 @@ public class Game extends BasicGameState {
 	public void createDungeon() {
 		// Create Dungeon
 		Dungeon testDungeon = new Dungeon(30, 1);
-
 		// Insert all locations into arrayList
 		dungeonDoorLocations = testDungeon.getDoorLocations();
 		dungeonWalls = testDungeon.getWalls();

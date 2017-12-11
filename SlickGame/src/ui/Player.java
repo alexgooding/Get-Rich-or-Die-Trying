@@ -1,5 +1,6 @@
 package ui;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -11,11 +12,11 @@ import dungeon.Room;
 // Version 2.0: Ray: Split from Map class
 
 public class Player {
-	public int playerScore;			//v1.4 Tracks the players score
-	private int goldCounter;	//For counting the total gold the player collected
-	private boolean died;		//died = true when player hit the bot
-	private int stepCounter;      //v1.3 Counts the number of steps the player takes.
-	private int stepsToGold;	//v1.4 Tracks the amount of steps it takes for a player to get a single piece of gold
+	private int playerScore;   // v1.4 Tracks the players score
+	private int goldCounter;   // For counting the total gold the player collected
+	private boolean died;      // died = true when player hit the bot
+	private int stepCounter;   // v1.3 Counts the number of steps the player takes.
+	private int stepsToGold;   //v1.4 Tracks the amount of steps it takes for a player to get a single piece of gold
 
 	//v1.8 Added win condition.
 	private boolean win;		//win = true when player walks on win location. 
@@ -24,6 +25,8 @@ public class Player {
 	private float playerPosX;
 	private float playerPosY;
 	private Image playerImg;
+
+	private static ArrayList<Integer> leaderboardScore = new ArrayList<Integer>();
 
 	public Player(float x, float y) throws SlickException {
 		this.playerScore = 0;
@@ -40,14 +43,20 @@ public class Player {
 		// Player sprite
 		playerImg = new Image("res/Player.png");
 		
+		// v1.5	Read the leaderboad.txt file
+		leaderboardScore = Leaderboard.read("Leaderboard.txt");
+		
+		// v1.5	Sort the arraylist into descending order
+		Collections.sort(leaderboardScore, Collections.reverseOrder());
 	}
 	
 	public void draw() {
 		playerImg.draw(this.playerPosX, this.playerPosY);
 	}
 	
-	public void update(int initialOffsetX, int initialOffsetY, boolean boundaryFlag, Input input, 
-			ArrayList<Location> dungeonWalls, ArrayList<Location> roomGold, ArrayList<Room> rooms) {
+	public void update(int initialOffsetX, int initialOffsetY, boolean boundaryFlag, 
+			Input input, ArrayList<Location> dungeonWalls, ArrayList<Location> 
+			roomGold, ArrayList<Room> rooms) {
 		
 		// v1.3 Add a flag for when the player moves.
 		boolean playerMoveFlag = false;
@@ -118,13 +127,13 @@ public class Player {
 				}
 			}
 
-			for(int i=0; i<roomGold.size(); i++) {
+			for (int i=0; i<roomGold.size(); i++) {
 				if(this.playerPosX == roomGold.get(i).getX()*16 - initialOffsetX 
 						&& this.playerPosY == roomGold.get(i).getY()*16 - initialOffsetY) {
 					roomGold.remove(i);	// Gold disappear
 					this.goldCounter++;
 					 // v1.4 -- calculates the amount of steps taken for a gold piece
-					this.playerScore = (this.playerScore + (1000 - (this.stepsToGold*100)));
+					this.playerScore = (this.playerScore + (1000 - (this.stepsToGold*50)));
 					this.stepsToGold = 0; // resets the steps to 0 
 				}
 			}
@@ -161,8 +170,46 @@ public class Player {
 				rooms.get(i).moveBotRandomly(boundaryFlag, dungeonWalls);
 			}
 		}
+		// v2.1 Reset score to 0 if it is negative
+		if (this.playerScore < 0) {
+			this.playerScore = 0;
+		}
 	}
-	
+
+	public void checkLeaderboard() {
+		// v1.5 Check if the player score is greater than the 3rd score
+		if (this.getPlayerScore()> leaderboardScore.get(2)) {
+
+			// v1.5 Check if the player score is greater than the 2nd score
+
+			if (this.getPlayerScore() > leaderboardScore.get(1)) {
+
+				// v1.5 Check if the player score is greater than the 1st score
+				if (this.getPlayerScore() > leaderboardScore.get(0)) {
+					// v1.5 Swap the player score with the 1st score 
+					int tempHighest = leaderboardScore.get(0);
+					int tempSecHighest = leaderboardScore.get(1);
+					leaderboardScore.set(0, this.getPlayerScore());
+					leaderboardScore.set(1, tempHighest);
+					leaderboardScore.set(2, tempSecHighest);
+				}
+				else {
+					// v1.5 Swap the player score with the 2nd score 
+					int tempSecHighest = leaderboardScore.get(1);
+					leaderboardScore.set(1, this.getPlayerScore());
+					leaderboardScore.set(2, tempSecHighest);
+				}
+			}
+			else {
+				// v1.5 Swap the player score with the 3rd score 
+				leaderboardScore.set(2, this.getPlayerScore());
+			}
+		}
+		// v1.5 Write the top 3 scores into Leaderboard.txt file
+		Leaderboard.write("Leaderboard.txt", leaderboardScore.get(0), 
+				leaderboardScore.get(1), leaderboardScore.get(2));
+	}
+
 	// Getters and Setters
 	public int getPlayerScore() {
 		return this.playerScore;
