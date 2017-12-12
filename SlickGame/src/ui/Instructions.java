@@ -45,7 +45,8 @@ public class Instructions extends BasicGameState {
 		String text = 
 				"Controls: Use the arrow keys to move up, down, left, and right. \n"
 				+ "Objective: Collect " + Game.getGOLDREQUIREMENT() + 
-				" golds in each of " + Game.getLEVELREQUIREMENT() + " levels. \n";
+				" golds in each of " + Game.getLEVELREQUIREMENT() + " levels. \n"
+						+ "Quit: You can press Escape to quit the game!";
 		headingFont.drawString(50, 70, heading, Color.white);
 		// Instructions
 		g.drawString(text, 50, 120);
