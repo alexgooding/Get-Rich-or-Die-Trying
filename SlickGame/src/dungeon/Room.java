@@ -141,7 +141,7 @@ public class Room {
 	}
 
 	/**
-	* Accessor for roomDifficulty. 
+	* Accessor for difficulty. 
 	*
 	* @param  none.
 	* @return The difficulty of the room.
