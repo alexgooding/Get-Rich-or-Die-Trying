@@ -18,7 +18,7 @@ public class Main extends StateBasedGame {
     public static final int halfWidth = winWidth / 2;
     public static final int halfHeight = winHeight / 2;
     //Sets the name of the game
-    public static final String gameName = "Get rich or die trying";
+    public static final String gameName = "Get Rich or Die Trying";
     //Game states
 	public static final int startMenu = 0;
 	public static final int instructions = 1;
