@@ -32,6 +32,7 @@ import dungeon.Room;
 // Version 2.0: Ray: Split the player stuff to Player class, When move to new level renew dungeon only but not the whole game -> variables will not reset
 // Version 2.1: Kimberley: Added win screen
 // Version 2.2: Ray: Added back the addScoreFlag
+// Version 2.3: Ray: Fixed Leaderboard bug.
 
 public class Game extends BasicGameState {
 	// Images
@@ -205,9 +206,11 @@ public class Game extends BasicGameState {
 			
 			// v2.1 -- If player goes to the exit
 			if (player.getPlayerPosX() == exitPosX && player.getPlayerPosY() == exitPosY) {
-				Win.playerScore = player.getPlayerScore();
-				// Check player's score with the leaderboard
+				// Check player's score with the leaderboard 
+				// v2.3 -- check the leaderboard first  
 				player.checkLeaderboard();
+				leaderboardScore = Leaderboard.read("Leaderboard.txt");
+				Win.playerScore = player.getPlayerScore();
 				// Go to win screen
 				sbg.enterState(3);
 			}
@@ -299,6 +302,10 @@ public class Game extends BasicGameState {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public static ArrayList<Integer> getLeaderboardScore() {
+		return leaderboardScore;
 	}
 
 	@Override

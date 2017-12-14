@@ -28,14 +28,16 @@ public class Win extends BasicGameState {
 	public static int playerScore;
 	
 	// Leaderboard
-	private static ArrayList<Integer> leaderboardScore = new ArrayList<Integer>();
+	// v.2.3 -- should be use the variable in the Game.java to be consistency
+	//private static ArrayList<Integer> leaderboardScore = new ArrayList<Integer>();
 
 	public Win(int state) {
 	}
 
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		// Read the leaderboard
-		leaderboardScore = Leaderboard.read("Leaderboard.txt");
+		// v.2.3 -- no need to read it as it will cause inconsistency
+		//leaderboardScore = Leaderboard.read("Leaderboard.txt");
 		// Retrieve resources
 		try {
 			player0 = new Image("res/Player0.png");
@@ -73,11 +75,11 @@ public class Win extends BasicGameState {
 		g.drawRect(Main.halfWidth - 100, 390, 200, 200);
 		textFont.drawString((Main.halfWidth - 
 				textFont.getWidth("Leaderboard") / 2 ), 400, "Leaderboard");
-		g.drawString("1st " + leaderboardScore.get(0), 
+		g.drawString("1st " + Game.getLeaderboardScore().get(0), // v.2.3 -- get it from Game.java instead of the local variable
 				Main.halfWidth - 50, 450);
-		g.drawString("2nd " + leaderboardScore.get(1), 
+		g.drawString("2nd " + Game.getLeaderboardScore().get(1), // v.2.3 -- get it from Game.java instead of the local variable
 				Main.halfWidth - 50, 500);
-		g.drawString("3rd " + leaderboardScore.get(2), 
+		g.drawString("3rd " + Game.getLeaderboardScore().get(2), // v.2.3 -- get it from Game.java instead of the local variable
 				Main.halfWidth - 50, 550);
 	}
 
