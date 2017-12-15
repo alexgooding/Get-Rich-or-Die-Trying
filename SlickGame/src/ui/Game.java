@@ -33,6 +33,7 @@ import dungeon.Room;
 // Version 2.1: Kimberley: Added win screen
 // Version 2.2: Ray: Added back the addScoreFlag
 // Version 2.3: Ray: Fixed Leaderboard bug.
+// Version 2.4: Ray: Fixed a bug when the portal is generated but he died. It will show win page if the player move to the portal position.
 
 public class Game extends BasicGameState {
 	// Images
@@ -205,7 +206,7 @@ public class Game extends BasicGameState {
 			}
 			
 			// v2.1 -- If player goes to the exit
-			if (player.getPlayerPosX() == exitPosX && player.getPlayerPosY() == exitPosY) {
+			if (player.getPlayerPosX() == exitPosX && player.getPlayerPosY() == exitPosY && player.isWin() == true) { //v2.4 added the winflag to go to the win page if he win
 				// Check player's score with the leaderboard 
 				// v2.3 -- check the leaderboard first  
 				player.checkLeaderboard();
@@ -269,7 +270,7 @@ public class Game extends BasicGameState {
 				boolean antiAlias = true;
 				TrueTypeFont textFont = new TrueTypeFont(awFont, antiAlias);
 				String message1 = "YOU DIED!";
-				String message2 = "(Press ENTER to restart";
+				String message2 = "(Press ENTER to restart)";
 				textFont.drawString((Main.halfWidth - 
 						textFont.getWidth(message1) / 2 ), 150, message1);
 				textFont.drawString((Main.halfWidth - 
